@@ -6,6 +6,9 @@ function DataPage() {
   const [autoScroll, setAutoScroll] = useState(true)
   const [isPaused, setIsPaused] = useState(false)
   const [activeMetric, setActiveMetric] = useState('posts')
+  const [lastEventTime, setLastEventTime] = useState(Date.now())
+  const [eventsPerMin, setEventsPerMin] = useState(28)
+  const [eventTimestamps, setEventTimestamps] = useState([])
   const [metrics, setMetrics] = useState({
     postsPerMin: 12.5,
     commentsPerMin: 47.2,
@@ -129,6 +132,15 @@ function DataPage() {
     return source.charAt(0).toUpperCase() + source.slice(1)
   }
 
+  const getTimeAgo = (timestamp) => {
+    const seconds = Math.floor((Date.now() - timestamp) / 1000)
+    if (seconds < 60) return `${seconds} second${seconds !== 1 ? 's' : ''} ago`
+    const minutes = Math.floor(seconds / 60)
+    if (minutes < 60) return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`
+    const hours = Math.floor(minutes / 60)
+    return `${hours} hour${hours !== 1 ? 's' : ''} ago`
+  }
+
   useEffect(() => {
     // Initialize data
     const timeData = []
@@ -137,8 +149,8 @@ function DataPage() {
     const sentimentData = []
     const toxicityData = []
 
-    for (let i = 0; i < 100; i++) {
-      timeData.push(new Date(Date.now() - (100 - i) * 500).toLocaleTimeString())
+    for (let i = 0; i < 300; i++) {
+      timeData.push(new Date(Date.now() - (300 - i) * 500).toLocaleTimeString())
       postsData.push(Math.floor(Math.random() * 20) + 5)
       commentsData.push(Math.floor(Math.random() * 80) + 20)
       sentimentData.push((Math.random() - 0.5) * 2)
@@ -175,7 +187,7 @@ function DataPage() {
         type: 'scatter',
         mode: 'lines',
         fill: 'tozeroy',
-        line: { color: '#10b981', width: 1, shape: 'spline' },
+        line: { color: '#10b981', width: 1 },
         fillcolor: 'rgba(16, 185, 129, 0.3)'
       }, {
         x: timeData,
@@ -184,10 +196,10 @@ function DataPage() {
         type: 'scatter',
         mode: 'lines',
         fill: 'tozeroy',
-        line: { color: '#ef4444', width: 1, shape: 'spline' },
+        line: { color: '#ef4444', width: 1 },
         fillcolor: 'rgba(239, 68, 68, 0.3)'
       }], {
-        xaxis: { title: 'Time', nticks: 10 },
+        xaxis: { title: 'Time', nticks: 6 },
         yaxis: { title: 'Sentiment Score', range: [-1, 1] },
         margin: { t: 20, r: 20, b: 60, l: 60 },
         plot_bgcolor: '#f9fafb',
@@ -238,13 +250,13 @@ function DataPage() {
       y: data,
       type: 'scatter',
       mode: 'lines',
-      line: { color: color, width: 2, shape: 'spline' },
+      line: { color: color, width: 2 },
       fill: 'tozeroy',
       fillcolor: color + '20',
       name: title
     }], {
       title: title,
-      xaxis: { title: 'Time', showgrid: false, nticks: 10 },
+      xaxis: { title: 'Time', showgrid: false, nticks: 6 },
       yaxis: { title: 'Value' },
       margin: { t: 40, r: 20, b: 60, l: 60 },
       plot_bgcolor: '#f9fafb',
@@ -252,6 +264,21 @@ function DataPage() {
       showlegend: false
     }, { responsive: true, displayModeBar: false })
   }, [activeMetric])
+
+  // Update last event time display and events per minute
+  useEffect(() => {
+    if (isPaused) return
+
+    const interval = setInterval(() => {
+      // Calculate events per minute from timestamps in last 60 seconds
+      const now = Date.now()
+      const oneMinuteAgo = now - 60000
+      const recentEvents = eventTimestamps.filter(timestamp => timestamp > oneMinuteAgo)
+      setEventsPerMin(recentEvents.length)
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [isPaused, lastEventTime, eventTimestamps])
 
   // Live update interval with random delay
   useEffect(() => {
@@ -276,8 +303,12 @@ function DataPage() {
       sentimentDataRef.current.push(newSentiment)
       toxicityDataRef.current.push(newToxicity)
 
-      // Keep only last 100 points
-      if (timeDataRef.current.length > 100) {
+      // Update last event time for each data update
+      const now = Date.now()
+      setLastEventTime(now)
+
+      // Keep only last 300 points
+      if (timeDataRef.current.length > 300) {
         timeDataRef.current.shift()
         postsDataRef.current.shift()
         commentsDataRef.current.shift()
@@ -301,11 +332,11 @@ function DataPage() {
           y: data,
           type: 'scatter',
           mode: 'lines',
-          line: { color: color, width: 2, shape: 'spline' },
+          line: { color: color, width: 2 },
           fill: 'tozeroy',
           fillcolor: color + '20'
         }], {
-          xaxis: { title: 'Time', showgrid: false, nticks: 10 },
+          xaxis: { title: 'Time', showgrid: false, nticks: 6 },
           yaxis: { title: 'Value' },
           margin: { t: 40, r: 20, b: 60, l: 60 },
           plot_bgcolor: '#f9fafb',
@@ -324,7 +355,7 @@ function DataPage() {
           type: 'scatter',
           mode: 'lines',
           fill: 'tozeroy',
-          line: { color: '#10b981', width: 1, shape: 'spline' },
+          line: { color: '#10b981', width: 1 },
           fillcolor: 'rgba(16, 185, 129, 0.3)'
         }, {
           x: [...timeDataRef.current],
@@ -333,10 +364,10 @@ function DataPage() {
           type: 'scatter',
           mode: 'lines',
           fill: 'tozeroy',
-          line: { color: '#ef4444', width: 1, shape: 'spline' },
+          line: { color: '#ef4444', width: 1 },
           fillcolor: 'rgba(239, 68, 68, 0.3)'
         }], {
-          xaxis: { title: 'Time', nticks: 10 },
+          xaxis: { title: 'Time', nticks: 6 },
           yaxis: { title: 'Sentiment Score', range: [-1, 1] },
           margin: { t: 20, r: 20, b: 60, l: 60 },
           plot_bgcolor: '#f9fafb',
@@ -387,6 +418,16 @@ function DataPage() {
         }
 
         setFeedItems(prev => [newItem, ...prev.slice(0, 19)])
+        
+        // Update last event time and add to timestamps
+        const now = Date.now()
+        setLastEventTime(now)
+        setEventTimestamps(prev => {
+          const updated = [...prev, now]
+          // Keep only timestamps from last 60 seconds
+          const oneMinuteAgo = now - 60000
+          return updated.filter(timestamp => timestamp > oneMinuteAgo)
+        })
       }
 
       // Update activity metrics based on recent data
@@ -431,13 +472,13 @@ function DataPage() {
               <div className="flex items-center gap-3">
                 <div className={`w-3 h-3 rounded-full ${isPaused ? 'bg-yellow-500' : 'bg-green-500 animate-pulse'}`}></div>
                 <span className="text-sm font-semibold text-gray-900">{isPaused ? 'PAUSED' : 'LIVE'}</span>
-                <span className="text-xs text-gray-600">Last event: 3 seconds ago</span>
-                <span className="text-xs text-gray-600">Events/min: 28</span>
+                <span className="text-xs text-gray-600">Last event: {getTimeAgo(lastEventTime)}</span>
+                <span className="text-xs text-gray-600">Events/min: {eventsPerMin}</span>
               </div>
 
               <div className="flex items-center gap-4">
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs text-gray-600">Source</label>
+                <div className="flex items-center gap-2">
+                  <label className="text-xs text-gray-600 whitespace-nowrap">Source</label>
                   <select className="px-3 py-1 border border-gray-300 rounded-md text-sm bg-white">
                     <option>All Sources</option>
                     <option>Reddit</option>
@@ -446,8 +487,8 @@ function DataPage() {
                   </select>
                 </div>
 
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs text-gray-600">Type</label>
+                <div className="flex items-center gap-2">
+                  <label className="text-xs text-gray-600 whitespace-nowrap">Type</label>
                   <select className="px-3 py-1 border border-gray-300 rounded-md text-sm bg-white">
                     <option>All Types</option>
                     <option>Posts</option>
@@ -480,45 +521,11 @@ function DataPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Live Feed Section */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 h-[800px] flex flex-col">
-              <div className="p-4 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  <i className="fa-solid fa-stream mr-2 text-blue-600"></i>Live Data Stream
-                </h3>
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                {feedItems.map((item) => (
-                  <div 
-                    key={item.id} 
-                    className={`${item.bgColor} border-l-4 ${item.borderColor} p-3 rounded-r-lg animate-fadeIn`}
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      <i className={`${getSourceIcon(item.source)} ${item.iconColor}`}></i>
-                      <span className="text-sm font-medium text-gray-900">{getSourceName(item.source)}</span>
-                      <span className="text-xs text-gray-500">{item.time}</span>
-                    </div>
-                    <p className="text-sm text-gray-800 mb-2">{item.content}</p>
-                    <div className="flex gap-2 flex-wrap">
-                      {item.tags.map((tag, idx) => (
-                        <span key={idx} className={`px-2 py-1 text-xs ${tag.bg} ${tag.text} rounded`}>
-                          {tag.label}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
           {/* Realtime Charts */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-4">
             {/* Real-time Activity */}
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-              <div className="flex items-center justify-between mb-4 flex-wrap gap-4">
+            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+              <div className="flex items-center justify-between mb-3 flex-wrap gap-4">
                 <h3 className="text-lg font-semibold text-gray-900">
                   <i className="fa-solid fa-chart-line mr-2 text-blue-600"></i>Real-time Activity
                 </h3>
@@ -543,21 +550,21 @@ function DataPage() {
                   ))}
                 </div>
               </div>
-              <div ref={realtimeChartRef} style={{ height: '300px' }}></div>
+              <div ref={realtimeChartRef} style={{ height: '320px' }}></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Activity Metrics */}
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                <h4 className="text-lg font-semibold text-gray-900 mb-4">
+              <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+                <h4 className="text-base font-semibold text-gray-900 mb-3">
                   <i className="fa-solid fa-tachometer-alt mr-2 text-green-600"></i>Activity Metrics
                   <span className="ml-2 text-xs text-green-500 animate-pulse">● LIVE</span>
                 </h4>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Posts per minute</span>
-                      <span className="text-lg font-bold text-gray-900 transition-all">{metrics.postsPerMin}</span>
+                      <span className="text-xs text-gray-600">Posts per minute</span>
+                      <span className="text-base font-bold text-gray-900 transition-all">{metrics.postsPerMin}</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
                       <div className="bg-blue-500 h-2 rounded-full transition-all duration-300" style={{ width: `${Math.min(100, (metrics.postsPerMin / 25) * 100)}%` }}></div>
@@ -566,8 +573,8 @@ function DataPage() {
 
                   <div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Comments per minute</span>
-                      <span className="text-lg font-bold text-gray-900 transition-all">{metrics.commentsPerMin}</span>
+                      <span className="text-xs text-gray-600">Comments per minute</span>
+                      <span className="text-base font-bold text-gray-900 transition-all">{metrics.commentsPerMin}</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
                       <div className="bg-green-500 h-2 rounded-full transition-all duration-300" style={{ width: `${Math.min(100, (metrics.commentsPerMin / 100) * 100)}%` }}></div>
@@ -576,8 +583,8 @@ function DataPage() {
 
                   <div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Average sentiment</span>
-                      <span className={`text-lg font-bold transition-all ${metrics.avgSentiment >= 0 ? 'text-green-600' : 'text-red-600'}`}>{metrics.avgSentiment}</span>
+                      <span className="text-xs text-gray-600">Average sentiment</span>
+                      <span className={`text-base font-bold transition-all ${metrics.avgSentiment >= 0 ? 'text-green-600' : 'text-red-600'}`}>{metrics.avgSentiment}</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
                       <div className={`h-2 rounded-full transition-all duration-300 ${metrics.avgSentiment >= 0 ? 'bg-green-500' : 'bg-red-500'}`} style={{ width: `${((parseFloat(metrics.avgSentiment) + 1) / 2) * 100}%` }}></div>
@@ -586,8 +593,8 @@ function DataPage() {
 
                   <div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Toxicity level</span>
-                      <span className={`text-lg font-bold transition-all ${metrics.toxicityLevel > 7 ? 'text-red-600' : metrics.toxicityLevel > 4 ? 'text-yellow-600' : 'text-green-600'}`}>{metrics.toxicityLevel}/10</span>
+                      <span className="text-xs text-gray-600">Toxicity level</span>
+                      <span className={`text-base font-bold transition-all ${metrics.toxicityLevel > 7 ? 'text-red-600' : metrics.toxicityLevel > 4 ? 'text-yellow-600' : 'text-green-600'}`}>{metrics.toxicityLevel}/10</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
                       <div className={`h-2 rounded-full transition-all duration-300 ${metrics.toxicityLevel > 7 ? 'bg-red-500' : metrics.toxicityLevel > 4 ? 'bg-yellow-500' : 'bg-green-500'}`} style={{ width: `${metrics.toxicityLevel * 10}%` }}></div>
@@ -597,20 +604,56 @@ function DataPage() {
               </div>
 
               {/* Source Distribution */}
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                <h4 className="text-lg font-semibold text-gray-900 mb-4">
+              <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+                <h4 className="text-base font-semibold text-gray-900 mb-3">
                   <i className="fa-solid fa-chart-pie mr-2 text-purple-600"></i>Source Distribution (Last Hour)
                 </h4>
-                <div ref={sourceDistributionRef} style={{ height: '200px' }}></div>
+                <div ref={sourceDistributionRef} style={{ height: '150px' }}></div>
               </div>
             </div>
 
             {/* Sentiment Flow */}
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-              <h4 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+              <h4 className="text-base font-semibold text-gray-900 mb-3">
                 <i className="fa-solid fa-heart mr-2 text-red-600"></i>Sentiment Flow (Last 30 minutes)
               </h4>
-              <div ref={sentimentFlowRef} style={{ height: '250px' }}></div>
+              <div ref={sentimentFlowRef} style={{ height: '280px' }}></div>
+            </div>
+          </div>
+
+          {/* Live Feed Section */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 h-[1024px] flex flex-col">
+              <div className="p-4 border-b border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  <i className="fa-solid fa-stream mr-2 text-blue-600"></i>Live Data Stream
+                </h3>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                {feedItems.map((item) => (
+                  <div 
+                    key={item.id} 
+                    className={`${item.bgColor} border-l-4 ${item.borderColor} p-1.5 rounded-r-lg animate-fadeIn`}
+                  >
+                    <div className="flex items-center justify-between mb-0.5">
+                      <div className="flex items-center gap-1.5">
+                        <i className={`${getSourceIcon(item.source)} ${item.iconColor} text-xs`}></i>
+                        <span className="text-xs font-medium text-gray-900">{getSourceName(item.source)}</span>
+                        <span className="text-xs text-gray-500">{item.time}</span>
+                      </div>
+                      <div className="flex gap-1">
+                        {item.tags.map((tag, idx) => (
+                          <span key={idx} className={`px-1 py-0.5 text-xs ${tag.bg} ${tag.text} rounded`}>
+                            {tag.label}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-800 truncate">{item.content}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
