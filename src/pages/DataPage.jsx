@@ -253,11 +253,16 @@ function DataPage() {
     }, { responsive: true, displayModeBar: false })
   }, [activeMetric])
 
-  // Live update interval
+  // Live update interval with random delay
   useEffect(() => {
     if (isPaused) return
 
-    const interval = setInterval(() => {
+    let timeoutId = null
+    let isCancelled = false
+
+    const updateData = () => {
+      if (isCancelled) return
+
       // Add new data points
       const newTime = new Date().toLocaleTimeString()
       const newPosts = Math.floor(Math.random() * 20) + 5
@@ -396,9 +401,19 @@ function DataPage() {
         avgSentiment: (recentSentiment.reduce((a, b) => a + b, 0) / recentSentiment.length).toFixed(2),
         toxicityLevel: (recentToxicity.reduce((a, b) => a + b, 0) / recentToxicity.length).toFixed(1)
       })
-    }, 800)
 
-    return () => clearInterval(interval)
+      const randomDelay = Math.floor(Math.random() * 1000) + 1500
+      timeoutId = setTimeout(updateData, randomDelay)
+    }
+
+    // Start the first update
+    const initialDelay = Math.floor(Math.random() * 1000) + 1500
+    timeoutId = setTimeout(updateData, initialDelay)
+
+    return () => {
+      isCancelled = true
+      if (timeoutId) clearTimeout(timeoutId)
+    }
   }, [isPaused, autoScroll, activeMetric])
 
   return (
