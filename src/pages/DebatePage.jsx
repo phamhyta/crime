@@ -95,9 +95,11 @@ function DebatePage() {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <div className="max-w-[1600px] mx-auto">
-        <Header title="Deep Evidence – Debate System" subtitle="Multi-persona debates with verifiable evidence and transparent reasoning" />
-      </div>
+      <Header 
+        title="Deep Evidence – Debate System" 
+        subtitle="Multi-persona debates with verifiable evidence and transparent reasoning" 
+        maxWidth="max-w-[1600px]"
+      />
 
       <div className="max-w-[1600px] mx-auto px-6 py-8">
         <div className="grid grid-cols-12 gap-6">
