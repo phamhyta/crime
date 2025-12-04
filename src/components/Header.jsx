@@ -4,7 +4,8 @@ function Header({ title, subtitle, maxWidth = 'max-w-7xl' }) {
   const location = useLocation()
   
   const navItems = [
-    { path: '/', label: 'Analysis', icon: 'fa-chart-line' },
+    { path: '/', label: 'Data', icon: 'fa-database' },
+    { path: '/analysis', label: 'Analysis', icon: 'fa-chart-line' },
     { path: '/qa', label: 'QA', icon: 'fa-question-circle' },
     { path: '/debate', label: 'Debate System', icon: 'fa-comments' }
   ]

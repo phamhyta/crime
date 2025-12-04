@@ -25,17 +25,6 @@ function KPISection() {
       changeType: 'positive'
     },
     {
-      title: 'Unique Authors',
-      value: '1,284',
-      icon: 'fa-users',
-      iconBg: 'bg-purple-100',
-      iconColor: 'text-purple-600',
-      sparklineData: [1320, 1310, 1295, 1300, 1290, 1285, 1284],
-      sparklineColor: '#a855f7',
-      change: '-2.1% from last week',
-      changeType: 'negative'
-    },
-    {
       title: 'Evidence-backed',
       value: '34.2%',
       icon: 'fa-shield',
@@ -77,7 +66,7 @@ function KPISection() {
 
   return (
     <div className="mb-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         {kpis.map((kpi, idx) => (
           <KPICard key={idx} {...kpi} />
         ))}
