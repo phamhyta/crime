@@ -31,56 +31,56 @@ function DataPage() {
       mixed: { bg: 'bg-yellow-100', text: 'text-yellow-800' }
     }
     const contentTemplates = [
-      'New comment in r/australia: "These youth laws are completely broken..."',
-      'ABC published article: "Queensland youth justice law update..."',
-      'New post in r/melbourne: "Rehabilitation programs showing positive results..."',
-      'Court ruling published: "Youth detention facility standards..."',
-      'New comment thread: "Police response to youth crime incidents..."',
-      'The Guardian: "Indigenous youth justice reform recommendations..."',
-      'Discussion in r/legal: "Constitutional challenges to new legislation..."',
-      'New analysis: "Youth crime statistics show declining trends..."',
-      'Reddit post: "Community programs reducing recidivism rates..."',
-      'News article: "Government announces new rehabilitation funding..."',
-      'Legal document: "Supreme Court reviews juvenile sentencing..."',
-      'Comment in r/sydney: "Local youth center opens new programs..."',
-      'News report: "Study finds positive impact of early intervention..."',
-      'Reddit discussion: "Public opinion on criminal responsibility age..."',
-      'Court case update: "Appeal filed for youth detention ruling..."',
-      'Article published: "Experts debate rehabilitation vs punishment..."',
-      'New post: "Community response to recent policy changes..."',
-      'Legal brief: "Constitutional analysis of youth justice laws..."',
-      'News coverage: "Youth crime rates in regional areas..."',
-      'Reddit thread: "Personal experiences with justice system..."',
-      'Report released: "Academic research on juvenile offenders..."',
-      'Comment: "Police training programs for youth interactions..."',
-      'Article: "International comparisons of youth justice..."',
-      'Legal update: "New legislation passes parliament..."',
-      'Discussion: "Mental health support in detention facilities..."',
-      'News: "Community leaders call for reform..."',
-      'Post: "Success stories from rehabilitation programs..."',
-      'Legal opinion: "Judicial discretion in youth cases..."',
-      'Article: "Media coverage impact on public perception..."',
-      'Comment: "Educational programs in correctional facilities..."',
-      'Report: "Long-term outcomes of intervention programs..."',
-      'News: "Government consultation on policy changes..."',
-      'Reddit: "Family perspectives on youth justice..."',
-      'Legal case: "Landmark decision on detention standards..."',
-      'Article: "Economic costs of youth crime..."',
-      'Discussion: "Cultural considerations in justice system..."',
-      'News: "Technology solutions for monitoring programs..."',
-      'Post: "Volunteer experiences in youth centers..."',
-      'Legal analysis: "Rights of young offenders..."',
-      'Report: "Recidivism rates by intervention type..."',
-      'Comment: "Public safety vs rehabilitation debate..."',
-      'Article: "International best practices review..."',
-      'News: "Funding announced for new initiatives..."',
-      'Reddit: "Community engagement in policy development..."',
-      'Legal update: "Appeals court ruling published..."',
-      'Discussion: "Role of families in rehabilitation..."',
-      'Report: "Effectiveness of different program models..."',
-      'Article: "Media representation of youth crime..."',
-      'Comment: "Support services for affected families..."',
-      'News: "Cross-party support for reform measures..."'
+      'New comment in r/australia: "These youth laws are completely broken and need urgent reform. The current system is failing both victims and young offenders with repeat offenses due to lack of proper rehabilitation."',
+      'ABC published article: "Queensland youth justice law update brings new rehabilitation programs aimed at reducing recidivism among young offenders through education and mental health support."',
+      'New post in r/melbourne: "Rehabilitation programs showing positive results in reducing recidivism. Programs focusing on education and job skills training have reduced reoffending rates by 35% over the past two years."',
+      'Court ruling published: "Youth detention facility standards must be improved to meet international human rights obligations. The Supreme Court has ordered immediate upgrades to facilities within 12 months."',
+      'New comment thread: "Police response to youth crime incidents needs complete overhaul. The heavy-handed approach is making things worse, not better. We need community policing and better training."',
+      'The Guardian: "Indigenous youth justice reform recommendations highlight the need for culturally appropriate interventions and community-led solutions to address over-representation in detention."',
+      'Discussion in r/legal: "Constitutional challenges to new legislation raise important questions about children\'s rights and the balance between public safety and rehabilitation goals."',
+      'New analysis: "Youth crime statistics show declining trends when community-based programs are properly funded and implemented with early intervention strategies."',
+      'Reddit post: "Community programs reducing recidivism rates demonstrate that investment in prevention and rehabilitation is far more effective than just locking kids up."',
+      'News article: "Government announces new rehabilitation funding of $50 million for community-based programs focusing on education, mental health support, and family intervention."',
+      'Legal document: "Supreme Court reviews juvenile sentencing practices and calls for increased judicial discretion in considering developmental factors and rehabilitation potential."',
+      'Comment in r/sydney: "Local youth center opens new programs providing education, job training, and mental health services to at-risk youth in the community."',
+      'News report: "Study finds positive impact of early intervention programs showing that children who receive support before entering the justice system have significantly better outcomes."',
+      'Reddit discussion: "Public opinion on criminal responsibility age reveals divided views between those advocating for rehabilitation and those prioritizing public safety concerns."',
+      'Court case update: "Appeal filed for youth detention ruling challenges the constitutionality of current practices and calls for immediate improvements to facility conditions."',
+      'Article published: "Experts debate rehabilitation vs punishment approaches, with neuroscience research supporting age-appropriate interventions for young offenders."',
+      'New post: "Community response to recent policy changes shows mixed reactions, with advocates welcoming reforms while some express concerns about implementation challenges."',
+      'Legal brief: "Constitutional analysis of youth justice laws examines the balance between protecting children\'s rights and ensuring community safety through appropriate interventions."',
+      'News coverage: "Youth crime rates in regional areas highlight the need for targeted programs addressing unique challenges faced by rural and remote communities."',
+      'Reddit thread: "Personal experiences with justice system reveal both success stories from rehabilitation programs and ongoing concerns about systemic issues and resource allocation."',
+      'Report released: "Academic research on juvenile offenders demonstrates that brain development continues until age 25, affecting impulse control and decision-making capacity."',
+      'Comment: "Police training programs for youth interactions emphasize de-escalation techniques and understanding of adolescent development to improve outcomes and reduce conflicts."',
+      'Article: "International comparisons of youth justice systems show that countries with higher minimum ages of criminal responsibility have better long-term outcomes for young people."',
+      'Legal update: "New legislation passes parliament introducing alternative sentencing options and increased funding for youth detention facility improvements across the state."',
+      'Discussion: "Mental health support in detention facilities remains inadequate, with experts calling for comprehensive services addressing trauma and developmental needs of young offenders."',
+      'News: "Community leaders call for reform emphasizing the importance of culturally appropriate interventions and community involvement in developing solutions to youth crime."',
+      'Post: "Success stories from rehabilitation programs highlight how education, job training, and family support can transform lives and prevent future involvement in the justice system."',
+      'Legal opinion: "Judicial discretion in youth cases allows courts to consider individual circumstances, developmental factors, and rehabilitation potential when making sentencing decisions."',
+      'Article: "Media coverage impact on public perception shapes debates about youth crime policy, with balanced reporting crucial for informed public discourse."',
+      'Comment: "Educational programs in correctional facilities provide opportunities for young offenders to continue learning and develop skills needed for successful reintegration into society."',
+      'Report: "Long-term outcomes of intervention programs show that early support and prevention strategies are more cost-effective than detention, saving $4.20 for every dollar invested."',
+      'News: "Government consultation on policy changes engages stakeholders including families, advocates, legal experts, and community organizations to develop comprehensive reform proposals."',
+      'Reddit: "Family perspectives on youth justice reveal the emotional and financial toll on families while highlighting the importance of support services and early intervention programs."',
+      'Legal case: "Landmark decision on detention standards sets important precedents for future cases involving juvenile offenders and establishes minimum requirements for facility conditions."',
+      'Article: "Economic costs of youth crime analysis reveals that investment in prevention and rehabilitation programs generates significant savings compared to long-term detention and recidivism."',
+      'Discussion: "Cultural considerations in justice system emphasize the need for culturally appropriate interventions that respect Indigenous traditions and involve community elders in decision-making."',
+      'News: "Technology solutions for monitoring programs offer new approaches to supervision and support while maintaining community connections and reducing reliance on detention facilities."',
+      'Post: "Volunteer experiences in youth centers demonstrate the positive impact of mentorship and community support in helping young people navigate challenges and build positive futures."',
+      'Legal analysis: "Rights of young offenders examines international standards and domestic legislation to ensure that children in the justice system receive appropriate protection and support."',
+      'Report: "Recidivism rates by intervention type show that community-based programs with comprehensive support services achieve significantly better outcomes than punitive approaches."',
+      'Comment: "Public safety vs rehabilitation debate continues with evidence supporting both perspectives, highlighting the complexity of balancing competing interests in youth justice policy."',
+      'Article: "International best practices review identifies successful approaches from other jurisdictions that could be adapted to improve outcomes for young offenders in Queensland."',
+      'News: "Funding announced for new initiatives includes $30 million for early intervention programs and $20 million for improving detention facility conditions and support services."',
+      'Reddit: "Community engagement in policy development ensures that reforms reflect local needs and priorities while building support for evidence-based approaches to youth justice."',
+      'Legal update: "Appeals court ruling published clarifies legal standards for youth detention practices and establishes guidelines for future cases involving juvenile offenders."',
+      'Discussion: "Role of families in rehabilitation emphasizes the importance of family support and involvement in helping young offenders successfully reintegrate into their communities."',
+      'Report: "Effectiveness of different program models compares outcomes across various intervention approaches to identify best practices and inform future policy development."',
+      'Article: "Media representation of youth crime influences public opinion and policy debates, with balanced coverage essential for understanding complex issues and potential solutions."',
+      'Comment: "Support services for affected families provide crucial assistance during difficult times, helping families navigate the justice system and access resources for their children."',
+      'News: "Cross-party support for reform measures demonstrates broad recognition of the need for evidence-based approaches to youth justice that prioritize rehabilitation and prevention."'
     ]
     
     const items = []
@@ -340,7 +340,7 @@ function DataPage() {
     const sentimentData = []
     const toxicityData = []
 
-    for (let i = 0; i < 300; i++) {
+    for (let i = 0; i < 130; i++) {
       timeData.push(new Date(Date.now() - (300 - i) * 500).toLocaleTimeString())
       postsData.push(Math.floor(Math.random() * 20) + 5)
       commentsData.push(Math.floor(Math.random() * 80) + 20)
@@ -586,14 +586,14 @@ function DataPage() {
         }
 
         const contentMessages = [
-          `New discussion about youth justice reform policies...`,
-          `Community response to recent court decisions...`,
-          `Analysis of rehabilitation program effectiveness...`,
-          `Public opinion on criminal responsibility age...`,
-          `Expert commentary on juvenile detention standards...`,
-          `Local news coverage of youth crime statistics...`,
-          `Legal perspective on constitutional challenges...`,
-          `Research findings on recidivism rates...`
+          `New discussion about youth justice reform policies highlights the need for evidence-based approaches balancing public safety with rehabilitation goals.`,
+          `Community response to recent court decisions shows mixed reactions with advocates welcoming reforms while some express concerns about implementation and resource allocation.`,
+          `Analysis of rehabilitation program effectiveness demonstrates that community-based interventions achieve 35% lower recidivism rates compared to traditional punitive approaches.`,
+          `Public opinion on criminal responsibility age reveals divided views between those advocating for raising the age to 14 and those prioritizing community safety concerns.`,
+          `Expert commentary on juvenile detention standards calls for immediate improvements to meet international human rights obligations and address systemic issues in facilities.`,
+          `Local news coverage of youth crime statistics shows declining trends in areas with well-funded early intervention programs and community support services.`,
+          `Legal perspective on constitutional challenges examines the balance between protecting children's rights and ensuring appropriate accountability for serious offenses.`,
+          `Research findings on recidivism rates indicate that investment in prevention and rehabilitation programs saves $4.20 for every dollar spent compared to detention costs.`
         ]
 
         const newItem = {
@@ -711,7 +711,7 @@ function DataPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-1">
           {/* Realtime Charts */}
           <div className="lg:col-span-1 space-y-1">
             {/* Real-time Activity */}
@@ -797,7 +797,7 @@ function DataPage() {
               {/* Source Distribution */}
               <div className="bg-white p-1 shadow-sm border border-gray-200">
                 <h4 className="text-sm font-semibold text-gray-900 mb-1">
-                  <i className="fa-solid fa-chart-pie mr-1 text-purple-600"></i>Source Distribution (Last Hour)
+                  <i className="fa-solid fa-chart-pie mr-1 text-purple-600"></i>Source Distribution
                 </h4>
                 <div ref={sourceDistributionRef} style={{ height: '150px' }}></div>
               </div>
@@ -813,8 +813,8 @@ function DataPage() {
           </div>
 
           {/* Live Feed Section */}
-          <div className="lg:col-span-1">
-            <div className="bg-white shadow-sm border border-gray-200 min-h-[760px] max-h-[835px] flex flex-col">
+          <div className="lg:col-span-2">
+            <div className="bg-white shadow-sm border border-gray-200 min-h-[760px] max-h-[855px] flex flex-col">
               <div className="p-1 border-b border-gray-200">
                 <h3 className="text-base font-semibold text-gray-900">
                   <i className="fa-solid fa-stream mr-1 text-blue-600"></i>Live Data Stream
@@ -843,7 +843,7 @@ function DataPage() {
                         ))}
                       </div>
                     </div>
-                    <p className="text-xs text-gray-800 truncate">{item.content}</p>
+                    <p className="text-xs text-gray-800 line-clamp-1 leading-tight">{item.content}</p>
                   </div>
                 ))}
                 </div>
