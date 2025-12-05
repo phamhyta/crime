@@ -20,11 +20,11 @@ function ChartSection({ title, children, charts }) {
 
   return (
     <div className="mb-8">
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-        <h3 className="text-xl font-semibold text-gray-900 mb-6">{title}</h3>
+      <div className="bg-white rounded-md p-4 shadow-sm border border-gray-200">
+        <h3 className="text-xl font-semibold text-gray-900 mb-4">{title}</h3>
         {children}
         {charts && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {charts.map((chart, idx) => (
               <div key={idx} className={chart.colSpan ? `lg:col-span-${chart.colSpan}` : ''}>
                 {chart.subtitle && <h4 className="text-lg font-medium text-gray-800 mb-4">{chart.subtitle}</h4>}

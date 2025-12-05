@@ -4,9 +4,48 @@ import ContextSidebar from '../components/qa/ContextSidebar'
 import ChatMessage from '../components/qa/ChatMessage'
 import ChatInput from '../components/qa/ChatInput'
 import AnswerSection from '../components/qa/AnswerSection'
+import ReasoningSteps from '../components/qa/ReasoningSteps'
 
 function QAPage() {
   const [message, setMessage] = useState('')
+  const [qaMode, setQaMode] = useState('normal') // 'normal' hoặc 'reasoning'
+  const [conversations, setConversations] = useState([
+    {
+      id: 1,
+      question: "What are the key arguments surrounding raising the age of criminal responsibility?",
+      timeAgo: "2h ago",
+      sourcesCount: 5,
+      bgColor: "bg-blue-50",
+      hoverColor: "hover:bg-blue-100",
+      borderColor: "border-blue-500"
+    },
+    {
+      id: 2,
+      question: "How do international standards compare to Queensland's youth justice?",
+      timeAgo: "5h ago",
+      sourcesCount: 8,
+      bgColor: "bg-gray-50",
+      hoverColor: "hover:bg-gray-100",
+      borderColor: "border-green-500"
+    },
+    {
+      id: 3,
+      question: "What evidence exists for rehabilitation programs effectiveness?",
+      timeAgo: "1d ago",
+      sourcesCount: 12,
+      bgColor: "bg-gray-50",
+      hoverColor: "hover:bg-gray-100",
+      borderColor: "border-purple-500"
+    }
+  ])
+
+  const handleSelectConversation = (conversation) => {
+    setMessage(conversation.question)
+  }
+
+  const handleClearHistory = () => {
+    setConversations([])
+  }
 
   const sources = [
     { icon: 'fa-brands fa-reddit', iconColor: 'text-orange-600', name: 'Reddit', score: '4.2', matches: 124, bg: 'bg-blue-50', hover: 'hover:bg-blue-100', scoreBg: 'bg-blue-200 text-blue-800' },
@@ -89,18 +128,63 @@ function QAPage() {
     <div className="bg-gray-50 text-gray-800 min-h-screen">
       <Header title="Deep Evidence — QA" subtitle="Ask questions. Get evidence-based answers with verifiable sources." />
 
-      <div className="flex max-w-7xl mx-auto">
-        <ContextSidebar sources={sources} highlights={highlights} />
+      <div className="flex max-w-[1400px] mx-auto">
+        <ContextSidebar 
+          sources={sources} 
+          highlights={highlights}
+          conversations={conversations}
+          onSelectConversation={handleSelectConversation}
+          onClearHistory={handleClearHistory}
+        />
 
         <main className="w-[70%] h-[calc(100vh-73px)] flex flex-col bg-gray-100">
-          <div className="flex-1 overflow-y-auto p-6 space-y-8">
+          {/* Mode Toggle */}
+          <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <span className="text-sm font-medium text-gray-700">Mode:</span>
+              <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
+                <button
+                  onClick={() => setQaMode('normal')}
+                  className={`px-4 py-2 text-sm font-medium rounded-md transition ${
+                    qaMode === 'normal'
+                      ? 'bg-white text-blue-600 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  <i className="fa-solid fa-comment-dots mr-2"></i>Thường
+                </button>
+                <button
+                  onClick={() => setQaMode('reasoning')}
+                  className={`px-4 py-2 text-sm font-medium rounded-md transition ${
+                    qaMode === 'reasoning'
+                      ? 'bg-white text-purple-600 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  <i className="fa-solid fa-brain mr-2"></i>Reasoning
+                </button>
+              </div>
+            </div>
+            {qaMode === 'reasoning' && (
+              <div className="flex items-center gap-2 text-xs text-purple-600 bg-purple-50 px-3 py-1.5 rounded-lg">
+                <i className="fa-solid fa-info-circle"></i>
+                <span>Hiển thị các bước suy luận chi tiết</span>
+              </div>
+            )}
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-4 space-y-8">
             <ChatMessage type="user" content="What are the key arguments and evidence surrounding the debate to raise the age of criminal responsibility in Queensland?" />
 
             <ChatMessage type="ai">
+              {qaMode === 'reasoning' && (
+                <ReasoningSteps />
+              )}
+
               <AnswerSection summary={summary} sections={answerSections} citations={citations} />
 
               {/* Traceability Graph */}
-              <div className="mb-6 p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+              <div className="mb-4 p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
                   <i className="fa-solid fa-project-diagram mr-2 text-indigo-600"></i>Traceability Graph
                 </h3>
@@ -119,7 +203,7 @@ function QAPage() {
               </div>
 
               {/* Counterfactual Box */}
-              <div className="mb-6 p-4 bg-purple-50 rounded-lg border border-purple-200">
+              <div className="mb-4 p-4 bg-purple-50 rounded-lg border border-purple-200">
                 <h3 className="text-lg font-semibold text-purple-900 mb-2 flex items-center">
                   <i className="fa-solid fa-random mr-2"></i>Counterfactual Analysis
                 </h3>
@@ -143,7 +227,7 @@ function QAPage() {
             </ChatMessage>
 
             {/* Related Questions */}
-            <div className="mt-6">
+            <div className="mt-4">
               <h4 className="text-lg font-semibold text-gray-900 mb-4">Related Questions</h4>
               <div className="space-y-3">
                 {relatedQuestions.map((q, idx) => (

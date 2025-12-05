@@ -655,22 +655,22 @@ function DataPage() {
         subtitle="Real-time data stream and monitoring dashboard" 
       />
 
-      <div className="max-w-[1400px] mx-auto px-6 py-3">
+      <div className="max-w-[1400px] mx-auto px-2 py-1">
         {/* Status Controls */}
-        <div className="bg-white p-4 shadow-sm border border-gray-200 mb-1">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-6 flex-wrap">
-              <div className="flex items-center gap-3">
+        <div className="bg-white p-2 shadow-sm border border-gray-200 mb-0.5">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex items-center gap-2">
                 <div className={`w-3 h-3 rounded-full ${isPaused ? 'bg-yellow-500' : 'bg-green-500 animate-pulse'}`}></div>
                 <span className="text-sm font-semibold text-gray-900">{isPaused ? 'PAUSED' : 'LIVE'}</span>
                 <span className="text-xs text-gray-600">Last event: {getTimeAgo(lastEventTime)}</span>
                 <span className="text-xs text-gray-600">Events/min: {eventsPerMin}</span>
               </div>
 
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
                   <label className="text-xs text-gray-600 whitespace-nowrap">Source</label>
-                  <select className="px-3 py-1 border border-gray-300 rounded-md text-sm bg-white">
+                  <select className="px-2 py-0.5 border border-gray-300 rounded-md text-xs bg-white">
                     <option>All Sources</option>
                     <option>Reddit</option>
                     <option>News</option>
@@ -678,9 +678,9 @@ function DataPage() {
                   </select>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
                   <label className="text-xs text-gray-600 whitespace-nowrap">Type</label>
-                  <select className="px-3 py-1 border border-gray-300 rounded-md text-sm bg-white">
+                  <select className="px-2 py-0.5 border border-gray-300 rounded-md text-xs bg-white">
                     <option>All Types</option>
                     <option>Posts</option>
                     <option>Comments</option>
@@ -690,8 +690,8 @@ function DataPage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <label className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2">
+              <label className="flex items-center gap-1 text-xs">
                 <input 
                   type="checkbox" 
                   checked={autoScroll} 
@@ -702,7 +702,7 @@ function DataPage() {
               </label>
               <button 
                 onClick={() => setIsPaused(!isPaused)}
-                className="px-3 py-1 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+                className="px-2 py-0.5 text-xs text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
               >
                 <i className={`fa-solid ${isPaused ? 'fa-play' : 'fa-pause'} mr-1`}></i>
                 {isPaused ? 'Resume' : 'Pause'}
@@ -715,12 +715,12 @@ function DataPage() {
           {/* Realtime Charts */}
           <div className="lg:col-span-1 space-y-1">
             {/* Real-time Activity */}
-            <div className="bg-white p-2 shadow-sm border border-gray-200">
+            <div className="bg-white p-1 shadow-sm border border-gray-200">
               <div className="flex items-center justify-between flex-wrap">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  <i className="fa-solid fa-chart-line mr-2 text-blue-600"></i>Real-time Activity
+                <h3 className="text-base font-semibold text-gray-900">
+                  <i className="fa-solid fa-chart-line mr-1 text-blue-600"></i>Real-time Activity
                 </h3>
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex gap-1 flex-wrap">
                   {[
                     { key: 'posts', label: 'Posts/min' },
                     { key: 'comments', label: 'Comments/min' },
@@ -730,7 +730,7 @@ function DataPage() {
                     <button
                       key={btn.key}
                       onClick={() => setActiveMetric(btn.key)}
-                      className={`px-3 py-1 text-xs rounded-md ${
+                      className={`px-2 py-0.5 text-xs rounded-md ${
                         activeMetric === btn.key 
                           ? 'bg-blue-600 text-white' 
                           : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -746,67 +746,67 @@ function DataPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-0.5">
               {/* Activity Metrics */}
-              <div className="bg-white p-2 shadow-sm border border-gray-200">
-                <h4 className="text-base font-semibold text-gray-900 mb-3">
-                  <i className="fa-solid fa-tachometer-alt mr-2 text-green-600"></i>Activity Metrics
-                  <span className="ml-2 text-xs text-green-500 animate-pulse">● LIVE</span>
+              <div className="bg-white p-1 shadow-sm border border-gray-200">
+                <h4 className="text-sm font-semibold text-gray-900 mb-1">
+                  <i className="fa-solid fa-tachometer-alt mr-1 text-green-600"></i>Activity Metrics
+                  <span className="ml-1 text-xs text-green-500 animate-pulse">● LIVE</span>
                 </h4>
                 <div className="space-y-1">
                   <div>
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-600">Posts per minute</span>
-                      <span className="text-base font-bold text-gray-900 transition-all">{metrics.postsPerMin}</span>
+                      <span className="text-sm font-bold text-gray-900 transition-all">{metrics.postsPerMin}</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                      <div className="bg-blue-500 h-2 rounded-full transition-all duration-300" style={{ width: `${Math.min(100, (metrics.postsPerMin / 25) * 100)}%` }}></div>
+                    <div className="w-full bg-gray-200 rounded-full h-1.5 mt-0.5">
+                      <div className="bg-blue-500 h-1.5 rounded-full transition-all duration-300" style={{ width: `${Math.min(100, (metrics.postsPerMin / 25) * 100)}%` }}></div>
                     </div>
                   </div>
 
                   <div>
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-600">Comments per minute</span>
-                      <span className="text-base font-bold text-gray-900 transition-all">{metrics.commentsPerMin}</span>
+                      <span className="text-sm font-bold text-gray-900 transition-all">{metrics.commentsPerMin}</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                      <div className="bg-green-500 h-2 rounded-full transition-all duration-300" style={{ width: `${Math.min(100, (metrics.commentsPerMin / 100) * 100)}%` }}></div>
+                    <div className="w-full bg-gray-200 rounded-full h-1.5 mt-0.5">
+                      <div className="bg-green-500 h-1.5 rounded-full transition-all duration-300" style={{ width: `${Math.min(100, (metrics.commentsPerMin / 100) * 100)}%` }}></div>
                     </div>
                   </div>
 
                   <div>
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-600">Average sentiment</span>
-                      <span className={`text-base font-bold transition-all ${metrics.avgSentiment >= 0 ? 'text-green-600' : 'text-red-600'}`}>{metrics.avgSentiment}</span>
+                      <span className={`text-sm font-bold transition-all ${metrics.avgSentiment >= 0 ? 'text-green-600' : 'text-red-600'}`}>{metrics.avgSentiment}</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                      <div className={`h-2 rounded-full transition-all duration-300 ${metrics.avgSentiment >= 0 ? 'bg-green-500' : 'bg-red-500'}`} style={{ width: `${((parseFloat(metrics.avgSentiment) + 1) / 2) * 100}%` }}></div>
+                    <div className="w-full bg-gray-200 rounded-full h-1.5 mt-0.5">
+                      <div className={`h-1.5 rounded-full transition-all duration-300 ${metrics.avgSentiment >= 0 ? 'bg-green-500' : 'bg-red-500'}`} style={{ width: `${((parseFloat(metrics.avgSentiment) + 1) / 2) * 100}%` }}></div>
                     </div>
                   </div>
 
                   <div>
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-600">Toxicity level</span>
-                      <span className={`text-base font-bold transition-all ${metrics.toxicityLevel > 7 ? 'text-red-600' : metrics.toxicityLevel > 4 ? 'text-yellow-600' : 'text-green-600'}`}>{metrics.toxicityLevel}/10</span>
+                      <span className={`text-sm font-bold transition-all ${metrics.toxicityLevel > 7 ? 'text-red-600' : metrics.toxicityLevel > 4 ? 'text-yellow-600' : 'text-green-600'}`}>{metrics.toxicityLevel}/10</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                      <div className={`h-2 rounded-full transition-all duration-300 ${metrics.toxicityLevel > 7 ? 'bg-red-500' : metrics.toxicityLevel > 4 ? 'bg-yellow-500' : 'bg-green-500'}`} style={{ width: `${metrics.toxicityLevel * 10}%` }}></div>
+                    <div className="w-full bg-gray-200 rounded-full h-1.5 mt-0.5">
+                      <div className={`h-1.5 rounded-full transition-all duration-300 ${metrics.toxicityLevel > 7 ? 'bg-red-500' : metrics.toxicityLevel > 4 ? 'bg-yellow-500' : 'bg-green-500'}`} style={{ width: `${metrics.toxicityLevel * 10}%` }}></div>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Source Distribution */}
-              <div className="bg-white p-2 shadow-sm border border-gray-200">
-                <h4 className="text-base font-semibold text-gray-900 mb-3">
-                  <i className="fa-solid fa-chart-pie mr-2 text-purple-600"></i>Source Distribution (Last Hour)
+              <div className="bg-white p-1 shadow-sm border border-gray-200">
+                <h4 className="text-sm font-semibold text-gray-900 mb-1">
+                  <i className="fa-solid fa-chart-pie mr-1 text-purple-600"></i>Source Distribution (Last Hour)
                 </h4>
                 <div ref={sourceDistributionRef} style={{ height: '150px' }}></div>
               </div>
             </div>
 
             {/* Sentiment Flow */}
-            <div className="bg-white p-2 shadow-sm border border-gray-200">
-              <h4 className="text-base font-semibold text-gray-900">
-                <i className="fa-solid fa-heart mr-2 text-red-600"></i>Sentiment Flow (Last 30 minutes)
+            <div className="bg-white p-1 shadow-sm border border-gray-200">
+              <h4 className="text-sm font-semibold text-gray-900">
+                  <i className="fa-solid fa-heart mr-1 text-red-600"></i>Sentiment Flow (Last 30 minutes)
               </h4>
               <div ref={sentimentFlowRef} style={{ height: '280px' }}></div>
             </div>
@@ -815,9 +815,9 @@ function DataPage() {
           {/* Live Feed Section */}
           <div className="lg:col-span-1">
             <div className="bg-white shadow-sm border border-gray-200 min-h-[760px] max-h-[890px] flex flex-col">
-              <div className="p-0.5 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  <i className="fa-solid fa-stream mr-2 text-blue-600"></i>Live Data Stream
+              <div className="p-1 border-b border-gray-200">
+                <h3 className="text-base font-semibold text-gray-900">
+                  <i className="fa-solid fa-stream mr-1 text-blue-600"></i>Live Data Stream
                 </h3>
               </div>
 
@@ -826,18 +826,18 @@ function DataPage() {
                 {feedItems.map((item) => (
                   <div 
                     key={item.id} 
-                    className={`${item.bgColor} border-l-4 ${item.borderColor} p-0.5 rounded-r-lg animate-fadeIn cursor-pointer hover:opacity-80 transition`}
+                    className={`${item.bgColor} border-l-4 ${item.borderColor} p-1 rounded-r-lg animate-fadeIn cursor-pointer hover:opacity-80 transition`}
                     onClick={() => handleOpenModal(item)}
                   >
                     <div className="flex items-center justify-between mb-0.5">
-                      <div className="flex items-center gap-0.5">
+                      <div className="flex items-center gap-1">
                         <i className={`${getSourceIcon(item.source)} ${item.iconColor} text-xs`}></i>
                         <span className="text-xs font-medium text-gray-900">{getSourceName(item.source)}</span>
                         <span className="text-xs text-gray-500">{formatRelativeShort(item.timestamp)}</span>
                       </div>
                       <div className="flex gap-0.5">
                         {item.tags.slice(0, 2).map((tag, idx) => (
-                          <span key={idx} className={`px-0.5 py-0.5 text-xs ${tag.bg} ${tag.text} rounded`}>
+                          <span key={idx} className={`px-1 py-0.5 text-xs ${tag.bg} ${tag.text} rounded`}>
                             {tag.label}
                           </span>
                         ))}

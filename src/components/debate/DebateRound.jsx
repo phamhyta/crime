@@ -2,7 +2,7 @@ import DebateBubble from './DebateBubble'
 
 function DebateRound({ round, isActive, onToggle, children, heatmapRef }) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div className="bg-white rounded-md shadow-sm border border-gray-200 overflow-hidden">
       <div
         className={`bg-gradient-to-r ${round.gradient} p-4 flex items-center justify-between cursor-pointer`}
         onClick={onToggle}
@@ -18,14 +18,14 @@ function DebateRound({ round, isActive, onToggle, children, heatmapRef }) {
       {isActive && (
         <div>
           {round.status === 'locked' ? (
-            <div className="p-6">
+            <div className="p-4">
               <div className="text-center py-8 text-gray-400">
                 <i className="fa-solid fa-lock text-4xl mb-3"></i>
                 <p>Locked until Round {round.num - 1} completes</p>
               </div>
             </div>
           ) : round.status === 'in-progress' ? (
-            <div className="p-6">
+            <div className="p-4">
               <div className="text-center py-8 text-gray-500">
                 <i className="fa-solid fa-clock text-4xl mb-3"></i>
                 <p>Round in progress...</p>
@@ -33,7 +33,7 @@ function DebateRound({ round, isActive, onToggle, children, heatmapRef }) {
             </div>
           ) : (
             <>
-              <div className="p-6 space-y-4">
+              <div className="p-4 space-y-4">
                 {children}
               </div>
               {heatmapRef && (

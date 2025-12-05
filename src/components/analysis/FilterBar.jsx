@@ -10,7 +10,7 @@ function FilterBar() {
   ]
 
   return (
-    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200 mb-6">
+    <div className="bg-white rounded-md p-4 shadow-sm border border-gray-200 mb-4">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-semibold text-gray-700 flex items-center">
           <i className="fa-solid fa-filter mr-2 text-blue-600"></i>Filters

@@ -80,9 +80,9 @@ function NewsDetailModal({ isOpen, onClose, newsItem }) {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50">
           <div className="flex items-center gap-4">
-            <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-sm ${getSourceIconBg(newsItem.source)}`}>
+            <div className={`w-12 h-12 rounded-md flex items-center justify-center shadow-sm ${getSourceIconBg(newsItem.source)}`}>
               <i className={`${getSourceIcon(newsItem.source)} text-2xl`}></i>
             </div>
             <div>
@@ -103,7 +103,7 @@ function NewsDetailModal({ isOpen, onClose, newsItem }) {
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+        <div className="p-4 overflow-y-auto max-h-[calc(90vh-140px)]">
           <div className="space-y-6">
             {/* Badges */}
             <div className="flex flex-wrap gap-2">
@@ -119,7 +119,7 @@ function NewsDetailModal({ isOpen, onClose, newsItem }) {
             </div>
 
             {/* Full Content */}
-            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200">
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-md p-4 border border-gray-200">
               <div className="flex items-center gap-2 mb-3">
                 <i className="fa-solid fa-file-alt text-gray-700"></i>
                 <h4 className="font-bold text-gray-900 text-lg">Full Content</h4>
@@ -130,9 +130,9 @@ function NewsDetailModal({ isOpen, onClose, newsItem }) {
             </div>
 
             {/* Metadata and AI Analysis */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {/* Metadata */}
-              <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+              <div className="bg-white rounded-md p-5 border border-gray-200 shadow-sm">
                 <div className="flex items-center gap-2 mb-4">
                   <i className="fa-solid fa-info-circle text-blue-600"></i>
                   <h4 className="font-bold text-gray-900">Metadata</h4>
@@ -162,7 +162,7 @@ function NewsDetailModal({ isOpen, onClose, newsItem }) {
               </div>
 
               {/* AI Analysis */}
-              <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+              <div className="bg-white rounded-md p-5 border border-gray-200 shadow-sm">
                 <div className="flex items-center gap-2 mb-4">
                   <i className="fa-solid fa-brain text-purple-600"></i>
                   <h4 className="font-bold text-gray-900">AI Analysis</h4>
@@ -204,7 +204,7 @@ function NewsDetailModal({ isOpen, onClose, newsItem }) {
             </div>
 
             {/* Evidence & Citations */}
-            <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+            <div className="bg-white rounded-md p-5 border border-gray-200 shadow-sm">
               <div className="flex items-center gap-2 mb-4">
                 <i className="fa-solid fa-link text-orange-600"></i>
                 <h4 className="font-bold text-gray-900">Evidence & Citations</h4>
@@ -235,7 +235,7 @@ function NewsDetailModal({ isOpen, onClose, newsItem }) {
             </div>
 
             {/* Reliability Assessment */}
-            <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-5 border border-amber-200">
+            <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-md p-5 border border-amber-200">
               <div className="flex items-center gap-2 mb-3">
                 <i className="fa-solid fa-exclamation-triangle text-amber-700"></i>
                 <h4 className="font-bold text-gray-900">Reliability Assessment</h4>
@@ -272,18 +272,18 @@ function NewsDetailModal({ isOpen, onClose, newsItem }) {
                   href={newsItem.sourceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-blue-800 transition shadow-md font-semibold text-center"
+                  className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-md hover:from-blue-700 hover:to-blue-800 transition shadow-md font-semibold text-center"
                 >
                   <i className="fa-solid fa-external-link-alt mr-2"></i>View Original Source
                 </a>
               )}
-              <button className="px-6 py-3 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-xl hover:from-gray-200 hover:to-gray-300 transition font-semibold shadow-sm">
+              <button className="px-6 py-3 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-md hover:from-gray-200 hover:to-gray-300 transition font-semibold shadow-sm">
                 <i className="fa-solid fa-share mr-2"></i>Share
               </button>
-              <button className="px-6 py-3 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-xl hover:from-gray-200 hover:to-gray-300 transition font-semibold shadow-sm">
+              <button className="px-6 py-3 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-md hover:from-gray-200 hover:to-gray-300 transition font-semibold shadow-sm">
                 <i className="fa-solid fa-bookmark mr-2"></i>Save
               </button>
-              <button className="px-6 py-3 bg-gradient-to-r from-green-100 to-green-200 text-green-700 rounded-xl hover:from-green-200 hover:to-green-300 transition font-semibold shadow-sm">
+              <button className="px-6 py-3 bg-gradient-to-r from-green-100 to-green-200 text-green-700 rounded-md hover:from-green-200 hover:to-green-300 transition font-semibold shadow-sm">
                 <i className="fa-solid fa-comments mr-2"></i>Open in Debate
               </button>
             </div>

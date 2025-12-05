@@ -1,6 +1,6 @@
 function SourceExplorer({ sources }) {
   return (
-    <div className="mb-6">
+    <div className="mb-4">
       <h4 className="text-sm font-semibold text-gray-700 mb-3">Source Explorer</h4>
       <div className="space-y-2">
         {sources.map((source, idx) => (

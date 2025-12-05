@@ -37,13 +37,13 @@ function ChatInput({ message, setMessage }) {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Ask about a policy, law, event, or evidence..."
-              className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-blue-600 resize-none text-sm"
+              className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:border-blue-600 resize-none text-sm"
             ></textarea>
             <button className="absolute bottom-3 right-3 text-gray-400 hover:text-gray-600 transition">
               <i className="fa-solid fa-paperclip text-lg"></i>
             </button>
           </div>
-          <button className="px-6 py-3 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition flex items-center gap-2 h-fit">
+          <button className="px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition flex items-center gap-2 h-fit">
             <i className="fa-solid fa-paper-plane"></i>
             Ask
           </button>

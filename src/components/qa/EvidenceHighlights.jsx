@@ -1,6 +1,6 @@
 function EvidenceHighlights({ highlights }) {
   return (
-    <div className="mb-6">
+    <div className="mb-4">
       <h4 className="text-sm font-semibold text-gray-700 mb-3">Top Evidence Highlights</h4>
       <div className="space-y-3">
         {highlights.map((item, idx) => (

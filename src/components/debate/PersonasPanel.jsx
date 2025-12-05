@@ -2,7 +2,7 @@ import PersonaCard from './PersonaCard'
 
 function PersonasPanel({ personas }) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-24">
+    <div className="bg-white rounded-md shadow-sm border border-gray-200 p-4 sticky top-24">
       <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
         <i className="fa-solid fa-users mr-2 text-blue-600"></i>Debate Personas
       </h3>

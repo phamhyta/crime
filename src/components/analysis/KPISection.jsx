@@ -65,8 +65,8 @@ function KPISection() {
   ]
 
   return (
-    <div className="mb-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+    <div className="mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-2">
         {kpis.map((kpi, idx) => (
           <KPICard key={idx} {...kpi} />
         ))}

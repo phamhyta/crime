@@ -8,7 +8,7 @@ function DebateOutcome({ rankings }) {
   ]
 
   return (
-    <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+    <div className="mt-8 bg-white rounded-md shadow-sm border border-gray-200 p-8">
       <div className="text-center mb-8">
         <div className="inline-block px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full text-sm font-medium mb-4">
           <i className="fa-solid fa-flag-checkered mr-2"></i>Debate Completed
@@ -64,7 +64,7 @@ function DebateOutcome({ rankings }) {
       </div>
 
       {/* Counterfactual */}
-      <div className="bg-gradient-to-r from-teal-50 to-blue-50 rounded-xl p-6 mb-8 border border-teal-200">
+      <div className="bg-gradient-to-r from-teal-50 to-blue-50 rounded-md p-4 mb-8 border border-teal-200">
         <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
           <i className="fa-solid fa-flask mr-2 text-teal-600"></i>Counterfactual Exploration
         </h3>

@@ -17,6 +17,117 @@ function AnalysisPage() {
   const groupSentimentRef = useRef(null)
   const biasTimelineRef = useRef(null)
 
+  const topicData = [
+    { 
+      id: 'raise-age',
+      name: 'Raise age to 14', 
+      posts: 347, 
+      comments: 2184, 
+      trend: 'up', 
+      sentiment: 'Mostly negative', 
+      sentimentColor: 'bg-red-100 text-red-800',
+      x: -0.5,
+      y: 0.4,
+      size: 40,
+      color: '#ef4444',
+      punitiveScore: -0.8,
+      legalScore: 0.6,
+      negativePercent: 65,
+      neutralPercent: 25,
+      positivePercent: 10
+    },
+    { 
+      id: 'detention',
+      name: 'Mandatory detention', 
+      posts: 289, 
+      comments: 1756, 
+      trend: 'down', 
+      sentiment: 'Mixed sentiment', 
+      sentimentColor: 'bg-yellow-100 text-yellow-800',
+      x: 0.3,
+      y: -0.3,
+      size: 30,
+      color: '#f59e0b',
+      punitiveScore: 0.5,
+      legalScore: -0.4,
+      negativePercent: 45,
+      neutralPercent: 35,
+      positivePercent: 20
+    },
+    { 
+      id: 'police',
+      name: 'Police overreach', 
+      posts: 234, 
+      comments: 1892, 
+      trend: 'up', 
+      sentiment: 'Mostly negative', 
+      sentimentColor: 'bg-red-100 text-red-800',
+      x: -0.2,
+      y: 0.7,
+      size: 35,
+      color: '#ef4444',
+      punitiveScore: -0.3,
+      legalScore: 0.8,
+      negativePercent: 70,
+      neutralPercent: 20,
+      positivePercent: 10
+    },
+    { 
+      id: 'rehabilitation',
+      name: 'Rehabilitation', 
+      posts: 156, 
+      comments: 892, 
+      trend: 'up', 
+      sentiment: 'Mostly positive', 
+      sentimentColor: 'bg-green-100 text-green-800',
+      x: 0.6,
+      y: 0.2,
+      size: 25,
+      color: '#10b981',
+      punitiveScore: 0.8,
+      legalScore: 0.3,
+      negativePercent: 15,
+      neutralPercent: 30,
+      positivePercent: 55
+    },
+    { 
+      id: 'punishment',
+      name: 'Punishment', 
+      posts: 189, 
+      comments: 1123, 
+      trend: 'stable', 
+      sentiment: 'Mostly negative', 
+      sentimentColor: 'bg-red-100 text-red-800',
+      x: -0.8,
+      y: -0.6,
+      size: 45,
+      color: '#ef4444',
+      punitiveScore: -0.9,
+      legalScore: -0.7,
+      negativePercent: 75,
+      neutralPercent: 15,
+      positivePercent: 10
+    },
+    { 
+      id: 'legal-reform',
+      name: 'Legal reform', 
+      posts: 123, 
+      comments: 654, 
+      trend: 'up', 
+      sentiment: 'Mixed sentiment', 
+      sentimentColor: 'bg-gray-100 text-gray-800',
+      x: 0.1,
+      y: 0.5,
+      size: 20,
+      color: '#6b7280',
+      punitiveScore: 0.2,
+      legalScore: 0.6,
+      negativePercent: 35,
+      neutralPercent: 40,
+      positivePercent: 25
+    }
+  ]
+
   useEffect(() => {
     // Timeline Chart
     if (timelineChartRef.current) {
@@ -70,26 +181,63 @@ function AnalysisPage() {
 
     // Topic Bubbles
     if (topicBubblesRef.current) {
-      Plotly.newPlot(topicBubblesRef.current, [{
-        x: [-0.5, 0.3, -0.2, 0.6, -0.8, 0.1],
-        y: [0.4, -0.3, 0.7, 0.2, -0.6, 0.5],
-        mode: 'markers',
-        marker: {
-          size: [40, 30, 35, 25, 45, 20],
-          color: ['#ef4444', '#f59e0b', '#ef4444', '#10b981', '#ef4444', '#6b7280'],
-          opacity: [0.8, 0.6, 0.7, 0.9, 0.75, 0.5],
-          line: { width: [3, 2, 2, 1, 3, 1], color: ['#dc2626', '#d97706', '#dc2626', '#059669', '#dc2626', '#4b5563'] }
+      const traces = topicData.map(topic => {
+        // Split long topic names for better display
+        const displayName = topic.name.length > 15 ? topic.name.substring(0, 15) + '...' : topic.name
+        
+        return {
+          x: [topic.x],
+          y: [topic.y],
+          mode: 'markers+text',
+          marker: {
+            size: [topic.size * 3],
+            color: topic.color,
+            opacity: 0.75,
+            line: { width: 3, color: topic.color }
+          },
+          text: [displayName],
+          textposition: 'top center',
+          textfont: { 
+            size: 10, 
+            color: '#374151', 
+            family: 'Arial, sans-serif'
+          },
+          name: topic.name,
+          customdata: [[topic.posts, topic.comments, topic.negativePercent, topic.neutralPercent, topic.positivePercent, topic.punitiveScore, topic.legalScore]],
+          hovertemplate: '<b>' + topic.name + '</b><br>' +
+            'Posts: %{customdata[0]:,}<br>' +
+            'Comments: %{customdata[1]:,}<br>' +
+            'Sentiment: %{customdata[2]}% Negative, %{customdata[3]}% Neutral, %{customdata[4]}% Positive<br>' +
+            'Punitive Score: %{customdata[5]:+.1f}<br>' +
+            'Legal Score: %{customdata[6]:+.1f}<extra></extra>',
+          type: 'scatter'
+        }
+      })
+
+      Plotly.newPlot(topicBubblesRef.current, traces, {
+        title: { text: 'Topic Landscape', font: { size: 16 } },
+        xaxis: { 
+          title: { text: 'Punitive ← → Rehabilitative', font: { size: 12 } }, 
+          range: [-1, 1],
+          showgrid: true,
+          gridcolor: '#e5e7eb',
+          zeroline: true,
+          zerolinecolor: '#9ca3af',
+          zerolinewidth: 2
         },
-        text: ['Raise age to 14', 'Detention', 'Police overreach', 'Rehabilitation', 'Punishment', 'Legal reform'],
-        textposition: 'top center',
-        type: 'scatter'
-      }], {
-        title: 'Topic Landscape',
-        xaxis: { title: 'Punitive ← → Rehabilitative', range: [-1, 1] },
-        yaxis: { title: 'Legal ← → Emotional', range: [-1, 1] },
-        margin: { t: 60, r: 20, b: 60, l: 60 },
+        yaxis: { 
+          title: { text: 'Legal ← → Emotional', font: { size: 12 } }, 
+          range: [-1, 1],
+          showgrid: true,
+          gridcolor: '#e5e7eb',
+          zeroline: true,
+          zerolinecolor: '#9ca3af',
+          zerolinewidth: 2
+        },
+        margin: { t: 60, r: 20, b: 70, l: 70 },
         plot_bgcolor: '#f9fafb',
-        paper_bgcolor: 'white'
+        paper_bgcolor: 'white',
+        hovermode: 'closest'
       }, { responsive: true, displayModeBar: false })
     }
 
@@ -188,12 +336,6 @@ function AnalysisPage() {
     }
   }, [])
 
-  const topics = [
-    { name: 'Raise age to 14', posts: 347, comments: 2184, trend: 'up', sentiment: 'Mostly negative', sentimentColor: 'bg-red-100 text-red-800' },
-    { name: 'Mandatory detention', posts: 289, comments: 1756, trend: 'down', sentiment: 'Mixed sentiment', sentimentColor: 'bg-yellow-100 text-yellow-800' },
-    { name: 'Police overreach', posts: 234, comments: 1892, trend: 'up', sentiment: 'Mostly negative', sentimentColor: 'bg-red-100 text-red-800' }
-  ]
-
   return (
     <div className="bg-gray-50 min-h-screen">
       <Header title="Deep Evidence – Analysis" subtitle="Analysis of debate data from Reddit on youth crime policy" />
@@ -203,9 +345,9 @@ function AnalysisPage() {
         <KPISection />
 
         {/* Post Dynamics */}
-        <div className="mb-8 bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-900 mb-6">Post Dynamics</h3>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="mb-4 bg-white rounded-md p-4 shadow-sm border border-gray-200">
+          <h3 className="text-xl font-semibold text-gray-900">Post Dynamics</h3>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div className="lg:col-span-2">
               <div ref={timelineChartRef} style={{ height: '300px' }}></div>
             </div>
@@ -217,34 +359,116 @@ function AnalysisPage() {
         </div>
 
         {/* Topic Landscape */}
-        <div className="mb-8 bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-900 mb-6">Topic & Argument Landscape</h3>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
-              <div ref={topicBubblesRef} style={{ height: '400px' }}></div>
-            </div>
-            <div>
-              <h4 className="text-lg font-medium text-gray-800 mb-4">Top Topics</h4>
-              <div className="space-y-4">
-                {topics.map((topic, idx) => (
-                  <div key={idx} className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition">
-                    <div className="flex items-center justify-between mb-2">
-                      <h5 className="font-medium text-gray-900">{topic.name}</h5>
-                      <i className={`fa-solid fa-arrow-trend-${topic.trend} text-${topic.trend === 'up' ? 'green' : 'red'}-600`}></i>
-                    </div>
-                    <p className="text-sm text-gray-600">{topic.posts} posts • {topic.comments} comments</p>
-                    <span className={`inline-block px-2 py-1 text-xs ${topic.sentimentColor} rounded mt-2`}>{topic.sentiment}</span>
-                  </div>
-                ))}
+        <div className="mb-4 bg-white rounded-md p-4 shadow-sm border border-gray-200">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-semibold text-gray-900">Topic & Argument Landscape</h3>
+            <div className="flex items-center gap-4 text-xs text-gray-600">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                <span>Negative</span>
               </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <span>Mixed</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                <span>Positive</span>
+              </div>
+            </div>
+          </div>
+          
+          {/* Chart Section */}
+          <div className="mb-4">
+            <div ref={topicBubblesRef} style={{ height: '500px' }}></div>
+            <div className="mt-4 flex items-center justify-center gap-8 text-xs text-gray-600">
+              <div className="flex items-center gap-2">
+                <span className="font-medium">Bubble size</span>
+                <span>∝ Total engagement</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="font-medium">Position</span>
+                <span>Argument stance</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Topic Cards Grid */}
+          <div className="mt-4">
+            <h4 className="text-lg font-medium text-gray-800 mb-4">All Topics Overview</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {topicData.map((topic) => (
+                <div 
+                  key={topic.id} 
+                  className="p-4 border border-gray-200 rounded-lg hover:shadow-md cursor-pointer transition-all"
+                  style={{ borderLeft: `4px solid ${topic.color}` }}
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <h5 className="font-semibold text-gray-900 text-sm leading-tight">{topic.name}</h5>
+                    <i className={`fa-solid fa-arrow-trend-${topic.trend} text-${topic.trend === 'up' ? 'green' : topic.trend === 'down' ? 'red' : 'gray'}-600 text-xs ml-2 flex-shrink-0`}></i>
+                  </div>
+                  
+                  <div className="space-y-2 mb-3">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-gray-600">Posts</span>
+                      <span className="font-semibold text-gray-900">{topic.posts.toLocaleString()}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-gray-600">Comments</span>
+                      <span className="font-semibold text-gray-900">{topic.comments.toLocaleString()}</span>
+                    </div>
+                  </div>
+
+                  <div className="mb-3">
+                    <div className="flex items-center justify-between text-xs mb-1">
+                      <span className="text-gray-600">Sentiment</span>
+                      <span className={`px-2 py-0.5 text-xs rounded ${topic.sentimentColor}`}>
+                        {topic.sentiment}
+                      </span>
+                    </div>
+                    <div className="flex gap-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div 
+                        className="bg-red-500" 
+                        style={{ width: `${topic.negativePercent}%` }}
+                        title={`${topic.negativePercent}% Negative`}
+                      ></div>
+                      <div 
+                        className="bg-gray-400" 
+                        style={{ width: `${topic.neutralPercent}%` }}
+                        title={`${topic.neutralPercent}% Neutral`}
+                      ></div>
+                      <div 
+                        className="bg-green-500" 
+                        style={{ width: `${topic.positivePercent}%` }}
+                        title={`${topic.positivePercent}% Positive`}
+                      ></div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs pt-2 border-t border-gray-100">
+                    <div>
+                      <span className="text-gray-600">Punitive Score</span>
+                      <div className="font-semibold text-gray-900">
+                        {topic.punitiveScore > 0 ? '+' : ''}{topic.punitiveScore.toFixed(1)}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Legal Score</span>
+                      <div className="font-semibold text-gray-900">
+                        {topic.legalScore > 0 ? '+' : ''}{topic.legalScore.toFixed(1)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
         {/* Sentiment & Stance */}
-        <div className="mb-8 bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-900 mb-6">Sentiment & Stance Analysis</h3>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="mb-4 bg-white rounded-md p-4 shadow-sm border border-gray-200">
+          <h3 className="text-xl font-semibold text-gray-900 mb-4">Sentiment & Stance Analysis</h3>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div ref={sentimentDistributionRef} style={{ height: '300px' }}></div>
             <div ref={sentimentTimelineRef} style={{ height: '300px' }}></div>
             <div ref={stanceDistributionRef} style={{ height: '300px' }}></div>
@@ -252,9 +476,9 @@ function AnalysisPage() {
         </div>
 
         {/* Reliability */}
-        <div className="mb-8 bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-900 mb-6">Reliability & Evidence Quality</h3>
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="mb-4 bg-white rounded-md p-4 shadow-sm border border-gray-200">
+          <h3 className="text-xl font-semibold text-gray-900 mb-4">Reliability & Evidence Quality</h3>
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
             <div ref={evidenceSourcesRef} style={{ height: '250px' }}></div>
             <div>
               <h4 className="text-lg font-medium text-gray-800 mb-4 text-center">Reliability Score</h4>
@@ -291,9 +515,9 @@ function AnalysisPage() {
         </div>
 
         {/* Bias Section */}
-        <div className="mb-8 bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-900 mb-6">Equity / Bias Signals</h3>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div className="mb-4 bg-white rounded-md p-4 shadow-sm border border-gray-200">
+          <h3 className="text-xl font-semibold text-gray-900 mb-4">Equity / Bias Signals</h3>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
               <h4 className="text-lg font-medium text-gray-800 mb-4">Groups Mentioned</h4>
               <div className="flex flex-wrap gap-2">
@@ -309,19 +533,6 @@ function AnalysisPage() {
           <div>
             <h4 className="text-lg font-medium text-gray-800 mb-4">Bias Over Time</h4>
             <div ref={biasTimelineRef} style={{ height: '200px' }}></div>
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="mb-8 bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-900 mb-6">Quick Actions</h3>
-          <div className="flex gap-4">
-            <Link to="/qa" className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition">
-              <i className="fa-solid fa-question-circle mr-2"></i>Ask Questions in QA
-            </Link>
-            <Link to="/debate" className="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm hover:bg-gray-700 transition">
-              <i className="fa-solid fa-comments mr-2"></i>Start Debate
-            </Link>
           </div>
         </div>
       </div>

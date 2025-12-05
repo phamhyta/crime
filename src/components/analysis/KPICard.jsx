@@ -30,7 +30,7 @@ function KPICard({ title, value, icon, iconBg, iconColor, sparklineData, sparkli
   }, [sparklineData, sparklineColor])
 
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+    <div className="bg-white rounded-md p-4 shadow-sm border border-gray-200">
       <div className="flex items-center justify-between mb-4">
         <div>
           <p className="text-sm font-medium text-gray-600">{title}</p>

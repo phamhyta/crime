@@ -2,7 +2,7 @@ function AnswerSection({ summary, sections, citations }) {
   return (
     <div>
       {/* Summary Answer */}
-      <div className="mb-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-lg">
+      <div className="mb-4 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-lg">
         <h3 className="text-lg font-semibold text-blue-900 mb-3 flex items-center">
           <i className="fa-solid fa-lightbulb mr-2"></i>Summary Answer
         </h3>
@@ -17,7 +17,7 @@ function AnswerSection({ summary, sections, citations }) {
       </div>
 
       {/* Evidence-Based Answer */}
-      <div className="mb-6">
+      <div className="mb-4">
         <h3 className="text-xl font-semibold text-gray-900 mb-4">Evidence-Based Answer</h3>
         {sections.map((section, idx) => (
           <div key={idx} className="mb-5">
@@ -38,7 +38,7 @@ function AnswerSection({ summary, sections, citations }) {
       </div>
 
       {/* Citations */}
-      <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
           <i className="fa-solid fa-bookmark mr-2 text-blue-600"></i>
           Sources Used
