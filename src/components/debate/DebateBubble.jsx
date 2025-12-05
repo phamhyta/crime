@@ -1,4 +1,15 @@
-function DebateBubble({ avatar, name, time, content, actions, tags, bgColor, borderColor }) {
+function DebateBubble({ avatar, name, time, content, actions, tags, bgColor, borderColor, onCiteClick }) {
+  const handleContentClick = (e) => {
+    if (e.target.tagName === 'SUP') {
+      const citeText = e.target.textContent
+      const citeIds = citeText.match(/\[\d+\]/g) || []
+      if (citeIds.length > 0 && onCiteClick) {
+        const firstCiteId = citeIds[0]
+        onCiteClick(firstCiteId)
+      }
+    }
+  }
+
   return (
     <div className="flex gap-4">
       <img src={avatar} className="w-10 h-10 rounded-full object-cover" alt={name} />
@@ -8,7 +19,11 @@ function DebateBubble({ avatar, name, time, content, actions, tags, bgColor, bor
             <h4 className="font-semibold text-gray-900">{name}</h4>
             <span className="text-xs text-gray-500">{time}</span>
           </div>
-          <p className="text-gray-800 leading-relaxed" dangerouslySetInnerHTML={{ __html: content }}></p>
+          <div 
+            className="text-gray-800 leading-relaxed"
+            onClick={handleContentClick}
+            dangerouslySetInnerHTML={{ __html: content }}
+          ></div>
           {actions && (
             <div className="flex gap-2 mt-3 flex-wrap">
               {actions.map((action, idx) => (

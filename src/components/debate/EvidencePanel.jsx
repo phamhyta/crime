@@ -1,6 +1,6 @@
 import EvidenceCard from './EvidenceCard'
 
-function EvidencePanel({ evidences, claimEvidenceRef }) {
+function EvidencePanel({ evidences, claimEvidenceRef, onEvidenceClick }) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-24">
       <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
@@ -8,7 +8,7 @@ function EvidencePanel({ evidences, claimEvidenceRef }) {
       </h3>
       <div className="space-y-4">
         {evidences.map((ev, idx) => (
-          <EvidenceCard key={idx} evidence={ev} />
+          <EvidenceCard key={idx} evidence={ev} onClick={onEvidenceClick} />
         ))}
       </div>
 

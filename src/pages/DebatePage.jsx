@@ -6,9 +6,12 @@ import DebateRound from '../components/debate/DebateRound'
 import DebateBubble from '../components/debate/DebateBubble'
 import EvidencePanel from '../components/debate/EvidencePanel'
 import DebateOutcome from '../components/debate/DebateOutcome'
+import EvidenceDetailModal from '../components/debate/EvidenceDetailModal'
 
 function DebatePage() {
   const [activeRounds, setActiveRounds] = useState({ round1: true, round2: false, round3: false, round4: false, round5: false })
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedEvidence, setSelectedEvidence] = useState(null)
 
   const heatmapRef = useRef(null)
   const strengthChartRef = useRef(null)
@@ -28,10 +31,126 @@ function DebatePage() {
   ]
 
   const evidences = [
-    { id: '[1]', color: 'blue', title: 'UN Convention on Rights of Child', text: '"States Parties recognize the rights of every child alleged as, accused of, or recognized as having infringed the penal law..."', type: 'Legal Document', usedBy: 2, score: '8.5', link: 'un.org/children-rights' },
-    { id: '[3]', color: 'purple', title: 'Recidivism Study 2023', text: '"Jurisdictions that raised minimum age showed 35% reduction in youth reoffending rates over 5-year period..."', type: 'Academic Research', usedBy: 1, score: '9.2', link: 'doi.org/10.xxxx' },
-    { id: '[4]', color: 'red', title: 'Crime Statistics Report', text: '"Youth crime increased 23% in metropolitan areas over past 18 months according to police data..."', type: 'Government Report', usedBy: 1, score: '6.3', scoreColor: 'bg-yellow-100 text-yellow-800', link: 'police.gov.au/statistics' }
+    { 
+      id: '[1]', 
+      color: 'blue', 
+      title: 'UN Convention on Rights of Child', 
+      text: '"States Parties recognize the rights of every child alleged as, accused of, or recognized as having infringed the penal law..."', 
+      fullContent: 'The UN Convention on the Rights of the Child (UNCRC) is an international human rights treaty that sets out the civil, political, economic, social, health and cultural rights of children. Article 40 specifically addresses juvenile justice and states that children accused of breaking the law should be treated with dignity and respect, and that their rights should be protected throughout the legal process. The convention recommends that states establish a minimum age of criminal responsibility that takes into account the child\'s emotional, mental and intellectual maturity.',
+      type: 'Legal Document', 
+      usedBy: 2, 
+      score: '8.5', 
+      link: 'un.org/children-rights',
+      source: 'United Nations',
+      publishedDate: 'November 20, 1989',
+      reliabilityAnalysis: 'Highly reliable source from official UN documentation. This is a ratified international treaty with broad consensus.',
+      verificationStatus: 'Verified against official UN documents and cross-referenced with international law databases.',
+      documentExtract: 'States Parties recognize the right of every child alleged as, accused of, or recognized as having infringed the penal law to be treated in a manner consistent with the promotion of the child\'s sense of dignity and worth. <span class="evidence-highlight">The Committee recommends that States Parties set a minimum age of criminal responsibility below which children shall be presumed not to have the capacity to infringe the penal law, and recommends 14 years as the appropriate minimum age.</span> This approach recognizes developmental immaturity and promotes rehabilitation over punishment for young offenders.'
+    },
+    { 
+      id: '[2]', 
+      color: 'blue', 
+      title: 'Developmental Neuroscience Research', 
+      text: 'Adolescent brain development research shows prefrontal cortex maturity reaches adult levels around age 25.',
+      fullContent: 'Recent neuroscience research demonstrates that the prefrontal cortex, responsible for impulse control, decision-making, and risk assessment, continues developing until around age 25. Studies using MRI scans show significant structural and functional differences between adolescent and adult brains. This research supports the argument that children under 14 may lack the neurological capacity for full criminal responsibility.',
+      type: 'Academic Research', 
+      usedBy: 1, 
+      score: '9.0', 
+      link: 'pubmed.ncbi.nlm.nih.gov/example',
+      source: 'Journal of Developmental Neuroscience',
+      publishedDate: '2023',
+      reliabilityAnalysis: 'Peer-reviewed academic research with rigorous methodology. High scientific credibility.',
+      verificationStatus: 'Verified through academic databases and cross-referenced with multiple neuroscience studies.',
+      documentExtract: 'Neuroimaging studies demonstrate that the prefrontal cortex, responsible for impulse control and decision-making, continues developing until age 25. <span class="evidence-highlight">Children under 14 show significantly reduced capacity for risk assessment and consequence evaluation compared to adults, with brain maturation markers indicating limited executive function development.</span> These findings support policy frameworks that account for developmental stage when determining criminal responsibility.'
+    },
+    { 
+      id: '[3]', 
+      color: 'purple', 
+      title: 'Recidivism Study 2023', 
+      text: '"Jurisdictions that raised minimum age showed 35% reduction in youth reoffending rates over 5-year period..."',
+      fullContent: 'A comprehensive longitudinal study analyzing recidivism rates across multiple jurisdictions found that states that raised the minimum age of criminal responsibility from 10 to 14 years showed a 35% reduction in youth reoffending rates over a 5-year period. The study tracked over 5,000 cases and controlled for various demographic and socioeconomic factors. The research suggests that early intervention and age-appropriate responses to offending behavior are more effective than criminal prosecution for young children.',
+      type: 'Academic Research', 
+      usedBy: 1, 
+      score: '9.2', 
+      link: 'doi.org/10.xxxx',
+      source: 'Criminology Research Journal',
+      publishedDate: '2023',
+      reliabilityAnalysis: 'High-quality academic research with large sample size and robust methodology. Findings are consistent with international research.',
+      verificationStatus: 'Peer-reviewed and verified through academic databases. Study methodology reviewed by independent experts.',
+      documentExtract: 'Analysis of jurisdictions that raised the minimum age of criminal responsibility revealed substantial benefits. <span class="evidence-highlight">Recidivism rates decreased by 35% among youth who received community-based interventions instead of detention, with particularly strong outcomes for first-time offenders under 14.</span> Cost-benefit analysis showed $4.20 saved for every dollar invested in early intervention programs compared to juvenile detention facilities.'
+    },
+    { 
+      id: '[4]', 
+      color: 'red', 
+      title: 'Crime Statistics Report', 
+      text: '"Youth crime increased 23% in metropolitan areas over past 18 months according to police data..."',
+      fullContent: 'Police statistics indicate a 23% increase in youth crime incidents in metropolitan areas over the past 18 months. The data covers property crimes, assaults, and other offenses committed by individuals under 18 years of age. However, the report notes that this increase may be influenced by changes in reporting practices and does not distinguish between different age groups within the youth category.',
+      type: 'Government Report', 
+      usedBy: 1, 
+      score: '6.3', 
+      scoreColor: 'bg-yellow-100 text-yellow-800', 
+      link: 'police.gov.au/statistics',
+      source: 'State Police Department',
+      publishedDate: '2024',
+      reliabilityAnalysis: 'Official government data, but methodology and categorization require careful interpretation. The increase may reflect reporting changes rather than actual crime trends.',
+      verificationStatus: 'Data verified against official police records. However, statistical interpretation requires additional context.',
+      documentExtract: 'Recent data indicates fluctuations in youth crime rates across different categories. <span class="evidence-highlight">Overall youth crime increased by 23% in the past year, though this includes all offenses from minor infractions to serious crimes, and varies significantly by region and socioeconomic factors.</span> Experts note that correlation with age of criminal responsibility policies requires careful contextual analysis and cannot be directly attributed without controlling for multiple variables.'
+    },
+    { 
+      id: '[5]', 
+      color: 'green', 
+      title: 'Indigenous Youth Justice Statistics', 
+      text: 'Indigenous youth comprise 65% of detained youth under 14 despite representing only 5% of the youth population.',
+      fullContent: 'Statistical analysis reveals significant overrepresentation of Indigenous youth in the juvenile justice system. While Indigenous youth represent approximately 5% of the total youth population, they comprise 65% of all detained youth under the age of 14. This disparity raises serious concerns about systemic bias, cultural factors, and access to appropriate support services. The data suggests that current policies disproportionately impact Indigenous communities.',
+      type: 'Government Report', 
+      usedBy: 1, 
+      score: '8.0', 
+      link: 'justice.gov.au/statistics',
+      source: 'Department of Justice',
+      publishedDate: '2024',
+      reliabilityAnalysis: 'Official government statistics with comprehensive data collection. The overrepresentation is consistent with historical trends and international comparisons.',
+      verificationStatus: 'Verified through official government databases and cross-referenced with independent research.',
+      documentExtract: 'Systemic analysis reveals profound disparities in youth justice outcomes. <span class="evidence-highlight">Indigenous youth comprise 65% of children detained under age 14, despite representing only 6% of the youth population, indicating severe overrepresentation driven by historical disadvantage, intergenerational trauma, and systemic bias.</span> Cultural intervention programs show 47% better rehabilitation outcomes compared to standard detention approaches for Indigenous youth.'
+    },
+    { 
+      id: '[6]', 
+      color: 'gray', 
+      title: 'Prefrontal Cortex Development Study', 
+      text: 'Research shows the prefrontal cortex, responsible for impulse control, isn\'t fully developed until age 25.',
+      fullContent: 'Neuroimaging studies demonstrate that the prefrontal cortex, which governs executive functions including impulse control, decision-making, and risk assessment, continues developing well into early adulthood. Structural MRI scans reveal that myelination and synaptic pruning processes in this region are not complete until approximately age 25. Functional MRI studies further show that adolescents exhibit different patterns of brain activation during risk-taking tasks compared to adults.',
+      type: 'Academic Research', 
+      usedBy: 1, 
+      score: '9.1', 
+      link: 'nature.com/neuroscience/example',
+      source: 'Nature Neuroscience',
+      publishedDate: '2022',
+      reliabilityAnalysis: 'High-quality peer-reviewed research from leading neuroscience journal. Methodology is sound and findings are widely accepted in the scientific community.',
+      verificationStatus: 'Verified through academic databases and supported by multiple independent studies.',
+      documentExtract: 'Neuroimaging studies demonstrate that the prefrontal cortex, responsible for impulse control and decision-making, continues developing until age 25. <span class="evidence-highlight">Children under 14 show significantly reduced capacity for risk assessment and consequence evaluation compared to adults, with brain maturation markers indicating limited executive function development.</span> These findings support policy frameworks that account for developmental stage when determining criminal responsibility.'
+    }
   ]
+
+  const getEvidenceById = (citeId) => {
+    return evidences.find(ev => ev.id === citeId) || null
+  }
+
+  const handleCiteClick = (citeId) => {
+    const evidence = getEvidenceById(citeId)
+    if (evidence) {
+      setSelectedEvidence(evidence)
+      setIsModalOpen(true)
+    }
+  }
+
+  const handleEvidenceClick = (evidence) => {
+    setSelectedEvidence(evidence)
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    setSelectedEvidence(null)
+  }
 
   const rankings = [
     { rank: 1, name: 'Criminologist', avatar: 'avatar-3.jpg', evidence: '9.1', consistency: '8.8', fairness: '9.0', bg: 'from-yellow-50 to-yellow-100', border: 'border-yellow-200', rankBg: 'bg-yellow-500' },
@@ -51,10 +170,10 @@ function DebatePage() {
   ]
 
   const round1Bubbles = [
-    { avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg', name: 'Legal Expert', time: '2 min ago', content: 'Raising the age to 14 aligns with international human rights standards and recognizes developmental neuroscience showing adolescent brain immaturity in decision-making<sup class="text-blue-600 cursor-pointer">[1][2]</sup>. The UN Convention on the Rights of the Child recommends 14 as minimum age.', bgColor: 'bg-blue-50', borderColor: 'border-blue-600', tags: [{ label: 'Evidence-backed', bg: 'bg-green-100', textColor: 'text-green-800' }, { label: 'High confidence', bg: 'bg-blue-100', textColor: 'text-blue-800' }] },
-    { avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg', name: 'Criminologist', time: '5 min ago', content: 'Empirical data from jurisdictions that raised the age shows reduced recidivism rates by 35%<sup class="text-purple-600 cursor-pointer">[3]</sup>. Youth under 14 in detention facilities experience trauma that increases likelihood of reoffending.', bgColor: 'bg-purple-50', borderColor: 'border-purple-600', tags: [{ label: 'Evidence-backed', bg: 'bg-green-100', textColor: 'text-green-800' }, { label: 'High confidence', bg: 'bg-blue-100', textColor: 'text-blue-800' }] },
-    { avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg', name: 'Conservative Politician', time: '8 min ago', content: 'Public safety must be prioritized. Recent crime statistics show youth crime increasing by 23%<sup class="text-red-600 cursor-pointer">[4]</sup>. Communities deserve protection from serious offenders regardless of age.', bgColor: 'bg-red-50', borderColor: 'border-red-600', tags: [{ label: 'Partially verified', bg: 'bg-yellow-100', textColor: 'text-yellow-800' }, { label: 'Medium confidence', bg: 'bg-orange-100', textColor: 'text-orange-800' }] },
-    { avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg', name: 'Community Advocate', time: '10 min ago', content: 'Indigenous youth are disproportionately affected by current laws, comprising 65% of detained youth under 14<sup class="text-green-600 cursor-pointer">[5]</sup>. This policy change addresses systemic inequality.', bgColor: 'bg-green-50', borderColor: 'border-green-600', tags: [{ label: 'Evidence-backed', bg: 'bg-green-100', textColor: 'text-green-800' }, { label: 'High confidence', bg: 'bg-blue-100', textColor: 'text-blue-800' }] }
+    { avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg', name: 'Legal Expert', time: '2 min ago', content: 'Raising the age to 14 aligns with international human rights standards and recognizes developmental neuroscience showing adolescent brain immaturity in decision-making<sup class="text-blue-600 cursor-pointer hover:underline">[1][2]</sup>. The UN Convention on the Rights of the Child recommends 14 as minimum age.', bgColor: 'bg-blue-50', borderColor: 'border-blue-600', tags: [{ label: 'Evidence-backed', bg: 'bg-green-100', textColor: 'text-green-800' }, { label: 'High confidence', bg: 'bg-blue-100', textColor: 'text-blue-800' }] },
+    { avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg', name: 'Criminologist', time: '5 min ago', content: 'Empirical data from jurisdictions that raised the age shows reduced recidivism rates by 35%<sup class="text-purple-600 cursor-pointer hover:underline">[3]</sup>. Youth under 14 in detention facilities experience trauma that increases likelihood of reoffending.', bgColor: 'bg-purple-50', borderColor: 'border-purple-600', tags: [{ label: 'Evidence-backed', bg: 'bg-green-100', textColor: 'text-green-800' }, { label: 'High confidence', bg: 'bg-blue-100', textColor: 'text-blue-800' }] },
+    { avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg', name: 'Conservative Politician', time: '8 min ago', content: 'Public safety must be prioritized. Recent crime statistics show youth crime increasing by 23%<sup class="text-red-600 cursor-pointer hover:underline">[4]</sup>. Communities deserve protection from serious offenders regardless of age.', bgColor: 'bg-red-50', borderColor: 'border-red-600', tags: [{ label: 'Partially verified', bg: 'bg-yellow-100', textColor: 'text-yellow-800' }, { label: 'Medium confidence', bg: 'bg-orange-100', textColor: 'text-orange-800' }] },
+    { avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg', name: 'Community Advocate', time: '10 min ago', content: 'Indigenous youth are disproportionately affected by current laws, comprising 65% of detained youth under 14<sup class="text-green-600 cursor-pointer hover:underline">[5]</sup>. This policy change addresses systemic inequality.', bgColor: 'bg-green-50', borderColor: 'border-green-600', tags: [{ label: 'Evidence-backed', bg: 'bg-green-100', textColor: 'text-green-800' }, { label: 'High confidence', bg: 'bg-blue-100', textColor: 'text-blue-800' }] }
   ]
 
   useEffect(() => {
@@ -136,7 +255,7 @@ function DebatePage() {
                   heatmapRef={round.num === 1 ? heatmapRef : null}
                 >
                   {round.num === 1 && round1Bubbles.map((bubble, idx) => (
-                    <DebateBubble key={idx} {...bubble} />
+                    <DebateBubble key={idx} {...bubble} onCiteClick={handleCiteClick} />
                   ))}
                   {round.num === 2 && (
                     <>
@@ -153,10 +272,11 @@ function DebatePage() {
                         avatar="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg"
                         name="Psychologist"
                         time="2 min ago"
-                        content={'Research shows the prefrontal cortex, responsible for impulse control, isn\'t fully developed until age 25<sup class="text-gray-600 cursor-pointer">[6]</sup>.'}
+                        content={'Research shows the prefrontal cortex, responsible for impulse control, isn\'t fully developed until age 25<sup class="text-gray-600 cursor-pointer hover:underline">[6]</sup>.'}
                         bgColor="bg-gray-50"
                         borderColor="border-gray-600"
                         tags={[{ label: 'Evidence-backed', bg: 'bg-green-100', textColor: 'text-green-800' }, { label: 'High confidence', bg: 'bg-blue-100', textColor: 'text-blue-800' }]}
+                        onCiteClick={handleCiteClick}
                       />
                     </>
                   )}
@@ -187,12 +307,18 @@ function DebatePage() {
 
           {/* Evidence Panel */}
           <div className="col-span-3">
-            <EvidencePanel evidences={evidences} claimEvidenceRef={claimEvidenceRef} />
+            <EvidencePanel evidences={evidences} claimEvidenceRef={claimEvidenceRef} onEvidenceClick={handleEvidenceClick} />
           </div>
         </div>
 
         <DebateOutcome rankings={rankings} />
       </div>
+
+      <EvidenceDetailModal 
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        evidence={selectedEvidence}
+      />
     </div>
   )
 }

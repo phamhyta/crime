@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Plotly from 'plotly.js-dist-min'
 import Header from '../components/Header'
+import NewsDetailModal from '../components/NewsDetailModal'
 
 function DataPage() {
   const [autoScroll, setAutoScroll] = useState(true)
@@ -15,99 +16,113 @@ function DataPage() {
     avgSentiment: -0.23,
     toxicityLevel: 6.8
   })
-  const [feedItems, setFeedItems] = useState([
-    {
-      id: 1,
-      source: 'reddit',
-      time: '5s ago',
-      content: 'New comment in r/australia: "These youth laws are completely broken..."',
-      tags: [
-        { label: 'Negative', bg: 'bg-red-100', text: 'text-red-800' },
-        { label: 'Low Toxicity', bg: 'bg-green-100', text: 'text-green-800' }
-      ],
-      bgColor: 'bg-red-50',
-      borderColor: 'border-red-500',
-      iconColor: 'text-red-600'
-    },
-    {
-      id: 2,
-      source: 'news',
-      time: '12s ago',
-      content: 'ABC published article: "Queensland youth justice law update..."',
-      tags: [
-        { label: 'Reliability: 0.91', bg: 'bg-blue-100', text: 'text-blue-800' },
-        { label: 'Neutral', bg: 'bg-gray-100', text: 'text-gray-800' }
-      ],
-      bgColor: 'bg-blue-50',
-      borderColor: 'border-blue-500',
-      iconColor: 'text-blue-600'
-    },
-    {
-      id: 3,
-      source: 'reddit',
-      time: '18s ago',
-      content: 'New post in r/melbourne: "Rehabilitation programs showing positive results..."',
-      tags: [
-        { label: 'Positive', bg: 'bg-green-100', text: 'text-green-800' },
-        { label: 'Evidence-backed', bg: 'bg-blue-100', text: 'text-blue-800' }
-      ],
-      bgColor: 'bg-green-50',
-      borderColor: 'border-green-500',
-      iconColor: 'text-green-600'
-    },
-    {
-      id: 4,
-      source: 'legal',
-      time: '25s ago',
-      content: 'Court ruling published: "Youth detention facility standards..."',
-      tags: [
-        { label: 'High Authority', bg: 'bg-purple-100', text: 'text-purple-800' },
-        { label: 'Neutral', bg: 'bg-gray-100', text: 'text-gray-800' }
-      ],
-      bgColor: 'bg-purple-50',
-      borderColor: 'border-purple-500',
-      iconColor: 'text-purple-600'
-    },
-    {
-      id: 5,
-      source: 'reddit',
-      time: '32s ago',
-      content: 'New comment thread: "Police response to youth crime incidents..."',
-      tags: [
-        { label: 'Mixed', bg: 'bg-yellow-100', text: 'text-yellow-800' },
-        { label: 'High Toxicity', bg: 'bg-red-100', text: 'text-red-800' }
-      ],
-      bgColor: 'bg-yellow-50',
-      borderColor: 'border-yellow-500',
-      iconColor: 'text-yellow-600'
-    },
-    {
-      id: 6,
-      source: 'news',
-      time: '45s ago',
-      content: 'The Guardian: "Indigenous youth justice reform recommendations..."',
-      tags: [
-        { label: 'Reliability: 0.87', bg: 'bg-indigo-100', text: 'text-indigo-800' },
-        { label: 'Positive', bg: 'bg-green-100', text: 'text-green-800' }
-      ],
-      bgColor: 'bg-indigo-50',
-      borderColor: 'border-indigo-500',
-      iconColor: 'text-indigo-600'
-    },
-    {
-      id: 7,
-      source: 'reddit',
-      time: '1m ago',
-      content: 'Discussion in r/legal: "Constitutional challenges to new legislation..."',
-      tags: [
-        { label: 'Neutral', bg: 'bg-gray-100', text: 'text-gray-800' },
-        { label: 'Academic tone', bg: 'bg-blue-100', text: 'text-blue-800' }
-      ],
-      bgColor: 'bg-gray-50',
-      borderColor: 'border-gray-500',
-      iconColor: 'text-gray-600'
+  const generateInitialFeedItems = () => {
+    const sources = ['reddit', 'news', 'legal']
+    const sourceColors = {
+      reddit: { bgColor: 'bg-red-50', borderColor: 'border-red-500', iconColor: 'text-red-600' },
+      news: { bgColor: 'bg-blue-50', borderColor: 'border-blue-500', iconColor: 'text-blue-600' },
+      legal: { bgColor: 'bg-purple-50', borderColor: 'border-purple-500', iconColor: 'text-purple-600' }
     }
-  ])
+    const sentiments = ['positive', 'negative', 'neutral', 'mixed']
+    const sentimentColors = {
+      positive: { bg: 'bg-green-100', text: 'text-green-800' },
+      negative: { bg: 'bg-red-100', text: 'text-red-800' },
+      neutral: { bg: 'bg-gray-100', text: 'text-gray-800' },
+      mixed: { bg: 'bg-yellow-100', text: 'text-yellow-800' }
+    }
+    const contentTemplates = [
+      'New comment in r/australia: "These youth laws are completely broken..."',
+      'ABC published article: "Queensland youth justice law update..."',
+      'New post in r/melbourne: "Rehabilitation programs showing positive results..."',
+      'Court ruling published: "Youth detention facility standards..."',
+      'New comment thread: "Police response to youth crime incidents..."',
+      'The Guardian: "Indigenous youth justice reform recommendations..."',
+      'Discussion in r/legal: "Constitutional challenges to new legislation..."',
+      'New analysis: "Youth crime statistics show declining trends..."',
+      'Reddit post: "Community programs reducing recidivism rates..."',
+      'News article: "Government announces new rehabilitation funding..."',
+      'Legal document: "Supreme Court reviews juvenile sentencing..."',
+      'Comment in r/sydney: "Local youth center opens new programs..."',
+      'News report: "Study finds positive impact of early intervention..."',
+      'Reddit discussion: "Public opinion on criminal responsibility age..."',
+      'Court case update: "Appeal filed for youth detention ruling..."',
+      'Article published: "Experts debate rehabilitation vs punishment..."',
+      'New post: "Community response to recent policy changes..."',
+      'Legal brief: "Constitutional analysis of youth justice laws..."',
+      'News coverage: "Youth crime rates in regional areas..."',
+      'Reddit thread: "Personal experiences with justice system..."',
+      'Report released: "Academic research on juvenile offenders..."',
+      'Comment: "Police training programs for youth interactions..."',
+      'Article: "International comparisons of youth justice..."',
+      'Legal update: "New legislation passes parliament..."',
+      'Discussion: "Mental health support in detention facilities..."',
+      'News: "Community leaders call for reform..."',
+      'Post: "Success stories from rehabilitation programs..."',
+      'Legal opinion: "Judicial discretion in youth cases..."',
+      'Article: "Media coverage impact on public perception..."',
+      'Comment: "Educational programs in correctional facilities..."',
+      'Report: "Long-term outcomes of intervention programs..."',
+      'News: "Government consultation on policy changes..."',
+      'Reddit: "Family perspectives on youth justice..."',
+      'Legal case: "Landmark decision on detention standards..."',
+      'Article: "Economic costs of youth crime..."',
+      'Discussion: "Cultural considerations in justice system..."',
+      'News: "Technology solutions for monitoring programs..."',
+      'Post: "Volunteer experiences in youth centers..."',
+      'Legal analysis: "Rights of young offenders..."',
+      'Report: "Recidivism rates by intervention type..."',
+      'Comment: "Public safety vs rehabilitation debate..."',
+      'Article: "International best practices review..."',
+      'News: "Funding announced for new initiatives..."',
+      'Reddit: "Community engagement in policy development..."',
+      'Legal update: "Appeals court ruling published..."',
+      'Discussion: "Role of families in rehabilitation..."',
+      'Report: "Effectiveness of different program models..."',
+      'Article: "Media representation of youth crime..."',
+      'Comment: "Support services for affected families..."',
+      'News: "Cross-party support for reform measures..."'
+    ]
+    
+    const items = []
+    const now = Date.now()
+    
+    for (let i = 0; i < 50; i++) {
+      const source = sources[Math.floor(Math.random() * sources.length)]
+      const sentiment = sentiments[Math.floor(Math.random() * sentiments.length)]
+      const minutesAgo = Math.floor(Math.random() * 480) + 1
+      const timestamp = now - minutesAgo * 60 * 1000
+      
+      const reliability = (0.75 + Math.random() * 0.2).toFixed(2)
+      const tags = [
+        { label: sentiment.charAt(0).toUpperCase() + sentiment.slice(1), ...sentimentColors[sentiment] },
+        { label: `Reliability: ${reliability}`, bg: 'bg-blue-100', text: 'text-blue-800' }
+      ]
+      
+      if (Math.random() > 0.7) {
+        tags.push({ label: 'Evidence-backed', bg: 'bg-indigo-100', text: 'text-indigo-800' })
+      }
+      if (Math.random() > 0.8) {
+        tags.push({ label: sentiment === 'negative' ? 'High Toxicity' : 'Low Toxicity', 
+          bg: sentiment === 'negative' ? 'bg-red-100' : 'bg-green-100', 
+          text: sentiment === 'negative' ? 'text-red-800' : 'text-green-800' })
+      }
+      
+      items.push({
+        id: i + 1,
+        source,
+        timestamp,
+        content: contentTemplates[i % contentTemplates.length],
+        tags,
+        ...sourceColors[source]
+      })
+    }
+    
+    return items.sort((a, b) => b.timestamp - a.timestamp)
+  }
+
+  const [feedItems, setFeedItems] = useState(generateInitialFeedItems())
+  const [selectedNewsItem, setSelectedNewsItem] = useState(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const realtimeChartRef = useRef(null)
   const sourceDistributionRef = useRef(null)
@@ -139,6 +154,182 @@ function DataPage() {
     if (minutes < 60) return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`
     const hours = Math.floor(minutes / 60)
     return `${hours} hour${hours !== 1 ? 's' : ''} ago`
+  }
+
+  const formatRelativeShort = (timestamp) => {
+    const diff = Date.now() - timestamp
+    const minutes = Math.floor(diff / 60000)
+    if (minutes < 1) return 'vừa xong'
+    if (minutes < 60) return `${minutes}m trước`
+    const hours = Math.floor(minutes / 60)
+    if (hours < 24) return `${hours}h trước`
+    const days = Math.floor(hours / 24)
+    return `${days}d trước`
+  }
+
+  const convertFeedItemToModalData = (item) => {
+    const sentimentTag = item.tags.find(tag => ['Positive', 'Negative', 'Neutral', 'Mixed'].includes(tag.label))
+    const sentiment = sentimentTag ? sentimentTag.label.toLowerCase() : 'neutral'
+    const reliabilityTag = item.tags.find(tag => tag.label.includes('Reliability:'))
+    const reliability = reliabilityTag ? reliabilityTag.label.replace('Reliability: ', '') : '0.85'
+    const toxicityTag = item.tags.find(tag => tag.label.includes('Toxicity'))
+    const toxicity = toxicityTag ? toxicityTag.label.replace('Toxicity: ', '') : 'Low'
+
+    const fullContentTemplates = {
+      'reddit': `This discussion explores important perspectives on youth justice reform. The content highlights community concerns and experiences related to the current system. ${item.content} This represents a valuable contribution to the ongoing public discourse on criminal justice policy.`,
+      'news': `This news article provides detailed coverage of recent developments in youth justice policy. ${item.content} The reporting includes expert commentary and analysis of the implications for affected communities and stakeholders.`,
+      'legal': `This legal document presents official information regarding youth justice regulations and court decisions. ${item.content} It outlines the legal framework and procedural requirements for relevant cases.`
+    }
+
+    const contentTemplates = {
+      'reddit': [
+        'These youth laws are completely broken and need urgent reform. The current system is failing both the victims and the young offenders. We\'re seeing repeat offenses because there\'s no proper rehabilitation, just punishment that doesn\'t address the root causes. The statistics speak for themselves - recidivism rates are through the roof. Something needs to change, and it needs to change now.',
+        'Rehabilitation programs showing positive results in reducing recidivism among young offenders. Just saw the latest report from the Victorian Youth Justice Department - programs focusing on education and job skills training have reduced reoffending rates by 35% over the past two years. This is exactly what we need more of. Investment in prevention and rehabilitation is far more effective than just locking kids up. Real success stories here.',
+        'Police response to youth crime incidents needs complete overhaul. The heavy-handed approach is making things worse, not better. We need community policing and better training on dealing with young people. But at the same time, police are dealing with impossible situations with no support. It\'s a mess from top to bottom.'
+      ],
+      'news': [
+        'Queensland youth justice law update brings new rehabilitation programs aimed at reducing recidivism among young offenders. The state government announced a $50 million investment in community-based programs focusing on education, mental health support, and family intervention. The new legislation includes provisions for alternative sentencing options and increased funding for youth detention facility improvements. Legal experts say the changes represent a significant shift toward a more rehabilitative approach.',
+        'A comprehensive study released today reveals promising trends in youth justice reform across multiple Australian states. The research, conducted over three years, shows significant improvements in rehabilitation outcomes when community-based programs are properly funded and implemented. Experts emphasize the importance of early intervention and family support systems.',
+        'Recent policy changes in youth justice legislation have sparked debate among legal professionals and community advocates. While some welcome the reforms as necessary modernization, others express concerns about implementation challenges and resource allocation.'
+      ],
+      'legal': [
+        'Court ruling published: Youth detention facility standards must be improved to meet international human rights obligations. The Supreme Court has ordered immediate upgrades to facilities within 12 months, citing inadequate educational provisions, mental health services, and living conditions. The ruling affects 14 detention centers across the state and requires quarterly progress reports.',
+        'Legal framework updated: New regulations governing youth justice procedures have been enacted following extensive consultation with stakeholders. The changes address procedural fairness, rights protection, and accountability measures for all parties involved in the juvenile justice system.',
+        'Appellate decision: The Court of Appeals has issued a significant ruling clarifying the legal standards for youth detention practices. This decision sets important precedents for future cases involving juvenile offenders and detention facility conditions.'
+      ]
+    }
+
+    const getFullContent = () => {
+      const template = fullContentTemplates[item.source] || item.content
+      const randomIndex = Math.floor(Math.random() * (contentTemplates[item.source]?.length || 1))
+      return contentTemplates[item.source]?.[randomIndex] || template
+    }
+
+    const getSourceDisplayName = () => {
+      switch (item.source) {
+        case 'reddit': return `r/australia • Posted ${formatRelativeShort(item.timestamp)}`
+        case 'news': return `ABC News • Published ${formatRelativeShort(item.timestamp)}`
+        case 'legal': return `Supreme Court • Published ${formatRelativeShort(item.timestamp)}`
+        default: return `${getSourceName(item.source)} • ${formatRelativeShort(item.timestamp)}`
+      }
+    }
+
+    const getTitle = () => {
+      const titleMap = {
+        'reddit': 'Youth Justice System Reform Discussion',
+        'news': 'Queensland Youth Justice Law Update',
+        'legal': 'Court Ruling on Youth Detention Standards'
+      }
+      return titleMap[item.source] || `${getSourceName(item.source)} Content`
+    }
+
+    const getAuthor = () => {
+      switch (item.source) {
+        case 'reddit': return `user_${Math.floor(Math.random() * 10000)}`
+        case 'news': return 'Sarah Mitchell, Legal Affairs Reporter'
+        case 'legal': return 'Supreme Court Registry'
+        default: return 'Unknown'
+      }
+    }
+
+    const getEngagement = () => {
+      switch (item.source) {
+        case 'reddit': return `${Math.floor(Math.random() * 200) + 20} upvotes, ${Math.floor(Math.random() * 50) + 10} comments`
+        case 'news': return `${Math.floor(Math.random() * 5000) + 500} views, ${Math.floor(Math.random() * 200) + 50} shares`
+        case 'legal': return 'Official court document'
+        default: return 'N/A'
+      }
+    }
+
+    const getCategory = () => {
+      const categories = {
+        'reddit': 'Youth Justice Reform',
+        'news': 'Policy Update',
+        'legal': 'Legal Ruling'
+      }
+      return categories[item.source] || 'General'
+    }
+
+    const getTopics = () => {
+      const topicsMap = {
+        'reddit': ['Reform', 'Recidivism', 'Rehabilitation', 'System Failure'],
+        'news': ['Policy', 'Rehabilitation', 'Government Investment', 'Legal Reform'],
+        'legal': ['Human Rights', 'Detention Standards', 'Court Order', 'Facility Improvement']
+      }
+      return topicsMap[item.source] || ['General Discussion', 'News Update']
+    }
+
+    const getCitations = () => {
+      const citationsMap = {
+        'reddit': [
+          { text: 'Recidivism statistics from Australian Institute of Criminology', url: '#', type: 'Government Data' },
+          { text: 'Youth detention facility reports', url: '#', type: 'Official Report' }
+        ],
+        'news': [
+          { text: 'Queensland Government Press Release', url: '#', type: 'Official Statement' },
+          { text: 'Legal expert commentary from QUT Law School', url: '#', type: 'Academic Source' },
+          { text: 'Budget allocation documents', url: '#', type: 'Government Data' }
+        ],
+        'legal': [
+          { text: 'UN Convention on the Rights of the Child', url: '#', type: 'International Law' },
+          { text: 'State detention facility audit reports', url: '#', type: 'Government Audit' }
+        ]
+      }
+      return citationsMap[item.source] || []
+    }
+
+    const getSentimentAnalysis = () => {
+      const analysisMap = {
+        'positive': 'Positive sentiment with optimism about rehabilitation effectiveness. Evidence-based argumentation.',
+        'negative': 'Strong negative sentiment with frustration and urgency. Language indicates systemic criticism and call for action.',
+        'neutral': 'Neutral, factual reporting with balanced presentation of information and expert commentary.',
+        'mixed': 'Mixed sentiment showing frustration with current system while acknowledging complexity. Emotional language with some inflammatory elements.'
+      }
+      return analysisMap[sentiment] || 'Neutral sentiment detected with clear emotional indicators.'
+    }
+
+    const getStance = () => {
+      const stanceMap = {
+        'positive': 'Strongly pro-rehabilitation approach',
+        'negative': 'Pro-reform, critical of current punitive approach',
+        'neutral': 'Neutral reporting on pro-rehabilitation policy changes',
+        'mixed': 'Critical of current approach, advocates for reform'
+      }
+      return stanceMap[sentiment] || 'Neutral reporting stance with balanced perspective.'
+    }
+
+    return {
+      ...item,
+      title: getTitle(),
+      subtitle: getSourceDisplayName(),
+      fullContent: getFullContent(),
+      sentiment: sentiment,
+      reliability: reliability,
+      toxicity: toxicity,
+      author: getAuthor(),
+      engagement: getEngagement(),
+      category: getCategory(),
+      topics: getTopics(),
+      citations: getCitations(),
+      sentimentAnalysis: getSentimentAnalysis(),
+      stance: getStance(),
+      sourceUrl: item.source === 'reddit' 
+        ? 'https://www.reddit.com/r/australia/comments/1h1np6r/still_have_their_baby_teeth_queensland_children/'
+        : item.source === 'news'
+        ? 'https://www.reddit.com/r/AustralianPolitics/comments/1h1o6ve/still_have_their_baby_teeth_queensland_children/'
+        : 'https://www.reddit.com/r/AustralianPolitics/comments/1ouy96k/shame_on_the_premier_plan_for_children_to_face/'
+    }
+  }
+
+  const handleOpenModal = (item) => {
+    const modalData = convertFeedItemToModalData(item)
+    setSelectedNewsItem(modalData)
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    setSelectedNewsItem(null)
   }
 
   useEffect(() => {
@@ -408,7 +599,7 @@ function DataPage() {
         const newItem = {
           id: Date.now(),
           source,
-          time: 'just now',
+          timestamp: Date.now(),
           content: contentMessages[Math.floor(Math.random() * contentMessages.length)],
           tags: [
             { label: sentiment.charAt(0).toUpperCase() + sentiment.slice(1), ...sentimentColors[sentiment] },
@@ -417,7 +608,7 @@ function DataPage() {
           ...sourceColors[source]
         }
 
-        setFeedItems(prev => [newItem, ...prev.slice(0, 19)])
+        setFeedItems(prev => [newItem, ...prev.slice(0, 49)])
         
         // Update last event time and add to timestamps
         const now = Date.now()
@@ -443,12 +634,12 @@ function DataPage() {
         toxicityLevel: (recentToxicity.reduce((a, b) => a + b, 0) / recentToxicity.length).toFixed(1)
       })
 
-      const randomDelay = Math.floor(Math.random() * 1000) + 1500
+      const randomDelay = Math.floor(Math.random() * 120000) + 120000
       timeoutId = setTimeout(updateData, randomDelay)
     }
 
     // Start the first update
-    const initialDelay = Math.floor(Math.random() * 1000) + 1500
+    const initialDelay = Math.floor(Math.random() * 120000) + 120000
     timeoutId = setTimeout(updateData, initialDelay)
 
     return () => {
@@ -464,9 +655,9 @@ function DataPage() {
         subtitle="Real-time data stream and monitoring dashboard" 
       />
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-[1400px] mx-auto px-6 py-3">
         {/* Status Controls */}
-        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200 mb-6">
+        <div className="bg-white p-4 shadow-sm border border-gray-200 mb-1">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-6 flex-wrap">
               <div className="flex items-center gap-3">
@@ -520,12 +711,12 @@ function DataPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
           {/* Realtime Charts */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="lg:col-span-1 space-y-1">
             {/* Real-time Activity */}
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
-              <div className="flex items-center justify-between mb-3 flex-wrap gap-4">
+            <div className="bg-white p-2 shadow-sm border border-gray-200">
+              <div className="flex items-center justify-between flex-wrap">
                 <h3 className="text-lg font-semibold text-gray-900">
                   <i className="fa-solid fa-chart-line mr-2 text-blue-600"></i>Real-time Activity
                 </h3>
@@ -550,17 +741,17 @@ function DataPage() {
                   ))}
                 </div>
               </div>
-              <div ref={realtimeChartRef} style={{ height: '320px' }}></div>
+              <div ref={realtimeChartRef} style={{ height: '300px' }}></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-0.5">
               {/* Activity Metrics */}
-              <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+              <div className="bg-white p-2 shadow-sm border border-gray-200">
                 <h4 className="text-base font-semibold text-gray-900 mb-3">
                   <i className="fa-solid fa-tachometer-alt mr-2 text-green-600"></i>Activity Metrics
                   <span className="ml-2 text-xs text-green-500 animate-pulse">● LIVE</span>
                 </h4>
-                <div className="space-y-3">
+                <div className="space-y-1">
                   <div>
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-600">Posts per minute</span>
@@ -604,7 +795,7 @@ function DataPage() {
               </div>
 
               {/* Source Distribution */}
-              <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+              <div className="bg-white p-2 shadow-sm border border-gray-200">
                 <h4 className="text-base font-semibold text-gray-900 mb-3">
                   <i className="fa-solid fa-chart-pie mr-2 text-purple-600"></i>Source Distribution (Last Hour)
                 </h4>
@@ -613,8 +804,8 @@ function DataPage() {
             </div>
 
             {/* Sentiment Flow */}
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
-              <h4 className="text-base font-semibold text-gray-900 mb-3">
+            <div className="bg-white p-2 shadow-sm border border-gray-200">
+              <h4 className="text-base font-semibold text-gray-900">
                 <i className="fa-solid fa-heart mr-2 text-red-600"></i>Sentiment Flow (Last 30 minutes)
               </h4>
               <div ref={sentimentFlowRef} style={{ height: '280px' }}></div>
@@ -623,28 +814,30 @@ function DataPage() {
 
           {/* Live Feed Section */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 h-[1024px] flex flex-col">
-              <div className="p-4 border-b border-gray-200">
+            <div className="bg-white shadow-sm border border-gray-200 min-h-[760px] max-h-[890px] flex flex-col">
+              <div className="p-0.5 border-b border-gray-200">
                 <h3 className="text-lg font-semibold text-gray-900">
                   <i className="fa-solid fa-stream mr-2 text-blue-600"></i>Live Data Stream
                 </h3>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-4 space-y-2">
+              <div className="flex-1 overflow-y-auto p-0.5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-0.5">
                 {feedItems.map((item) => (
                   <div 
                     key={item.id} 
-                    className={`${item.bgColor} border-l-4 ${item.borderColor} p-1.5 rounded-r-lg animate-fadeIn`}
+                    className={`${item.bgColor} border-l-4 ${item.borderColor} p-0.5 rounded-r-lg animate-fadeIn cursor-pointer hover:opacity-80 transition`}
+                    onClick={() => handleOpenModal(item)}
                   >
                     <div className="flex items-center justify-between mb-0.5">
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-0.5">
                         <i className={`${getSourceIcon(item.source)} ${item.iconColor} text-xs`}></i>
                         <span className="text-xs font-medium text-gray-900">{getSourceName(item.source)}</span>
-                        <span className="text-xs text-gray-500">{item.time}</span>
+                        <span className="text-xs text-gray-500">{formatRelativeShort(item.timestamp)}</span>
                       </div>
-                      <div className="flex gap-1">
-                        {item.tags.map((tag, idx) => (
-                          <span key={idx} className={`px-1 py-0.5 text-xs ${tag.bg} ${tag.text} rounded`}>
+                      <div className="flex gap-0.5">
+                        {item.tags.slice(0, 2).map((tag, idx) => (
+                          <span key={idx} className={`px-0.5 py-0.5 text-xs ${tag.bg} ${tag.text} rounded`}>
                             {tag.label}
                           </span>
                         ))}
@@ -653,6 +846,7 @@ function DataPage() {
                     <p className="text-xs text-gray-800 truncate">{item.content}</p>
                   </div>
                 ))}
+                </div>
               </div>
             </div>
           </div>
@@ -668,6 +862,12 @@ function DataPage() {
           animation: fadeIn 0.5s ease-in;
         }
       `}</style>
+
+      <NewsDetailModal 
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        newsItem={selectedNewsItem}
+      />
     </div>
   )
 }
