@@ -814,7 +814,7 @@ function DataPage() {
 
           {/* Live Feed Section */}
           <div className="lg:col-span-1">
-            <div className="bg-white shadow-sm border border-gray-200 min-h-[760px] max-h-[890px] flex flex-col">
+            <div className="bg-white shadow-sm border border-gray-200 min-h-[760px] max-h-[835px] flex flex-col">
               <div className="p-1 border-b border-gray-200">
                 <h3 className="text-base font-semibold text-gray-900">
                   <i className="fa-solid fa-stream mr-1 text-blue-600"></i>Live Data Stream
