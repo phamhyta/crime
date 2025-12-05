@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import Plotly from 'plotly.js-dist-min'
+import wordcloud from 'wordcloud'
 import Header from '../components/Header'
 import FilterBar from '../components/analysis/FilterBar'
 import KPISection from '../components/analysis/KPISection'
@@ -16,6 +17,7 @@ function AnalysisPage() {
   const citationNetworkRef = useRef(null)
   const groupSentimentRef = useRef(null)
   const biasTimelineRef = useRef(null)
+  const groupsWordCloudRef = useRef(null)
 
   const topicData = [
     { 
@@ -182,15 +184,13 @@ function AnalysisPage() {
     // Topic Bubbles
     if (topicBubblesRef.current) {
       const traces = topicData.map(topic => {
-        // Split long topic names for better display
         const displayName = topic.name.length > 15 ? topic.name.substring(0, 15) + '...' : topic.name
-        
         return {
           x: [topic.x],
           y: [topic.y],
           mode: 'markers+text',
           marker: {
-            size: [topic.size * 3],
+            size: [topic.size * 2],
             color: topic.color,
             opacity: 0.75,
             line: { width: 3, color: topic.color }
@@ -329,6 +329,106 @@ function AnalysisPage() {
       }, { responsive: true, displayModeBar: false })
     }
 
+    const renderWordCloud = () => {
+      if (!groupsWordCloudRef.current) return
+      const container = groupsWordCloudRef.current.parentElement
+      if (!container) return
+      
+      groupsWordCloudRef.current.width = container.clientWidth - 40
+      groupsWordCloudRef.current.height = container.clientHeight - 40
+
+      const groupsData = [
+        ['Indigenous youth', 100],
+        ['Police', 85],
+        ['Victims', 80],
+        ['Government', 75],
+        ['Migrant communities', 70],
+        ['Judges', 68],
+        ['Rural youth', 65],
+        ['Community', 62],
+        ['Families', 60],
+        ['Youth workers', 55],
+        ['Legal experts', 52],
+        ['Advocates', 50],
+        ['Social workers', 48],
+        ['Teachers', 46],
+        ['Politicians', 45],
+        ['Media', 40],
+        ['Academics', 38],
+        ['Activists', 36],
+        ['Correctional officers', 35],
+        ['Psychologists', 33],
+        ['Lawyers', 32],
+        ['Researchers', 30],
+        ['Counselors', 30],
+        ['Probation officers', 28],
+        ['Mentors', 26],
+        ['Volunteers', 24],
+        ['Policy makers', 22],
+        ['NGOs', 21],
+        ['Detention staff', 20],
+        ['Rehabilitation specialists', 20],
+        ['Child protection workers', 18],
+        ['Court officials', 17],
+        ['Parole officers', 16],
+        ['Youth mentors', 15],
+        ['Community leaders', 14],
+        ['Elders', 13],
+        ['Religious leaders', 12],
+        ['Cultural advisors', 12],
+        ['Forensic psychologists', 10],
+        ['Behavioral analysts', 9],
+        ['Case managers', 9],
+        ['Support workers', 8],
+        ['Outreach coordinators', 8],
+        ['Family support services', 7],
+        ['Peer support workers', 7],
+        ['Education specialists', 6],
+        ['Employment counselors', 6],
+        ['Substance abuse counselors', 5],
+        ['Mental health workers', 5],
+        ['Trauma specialists', 4],
+        ['Restorative justice facilitators', 4],
+        ['Mediators', 3],
+        ['Victim advocates', 3],
+        ['Witness support', 3]
+      ]
+
+      // Simple color array
+      const colors = [
+        '#3b82f6', '#ef4444', '#ec4899', '#6366f1', '#10b981',
+        '#8b5cf6', '#f59e0b', '#14b8a6', '#f97316', '#06b6d4',
+        '#84cc16', '#a855f7', '#06b6d4', '#10b981', '#6366f1',
+        '#8b5cf6', '#a855f7', '#ec4899', '#f59e0b', '#14b8a6',
+        '#3b82f6', '#84cc16', '#06b6d4', '#6b7280', '#9ca3af',
+        '#d1d5db', '#e5e7eb', '#f3f4f6', '#dc2626', '#ea580c',
+        '#ca8a04', '#65a30d', '#059669', '#0891b2', '#0284c7',
+        '#2563eb', '#7c3aed', '#c026d3', '#db2777', '#e11d48',
+        '#be123c', '#9f1239', '#831843', '#701a75', '#86198f',
+        '#9333ea', '#7e22ce', '#6b21a8', '#581c87', '#4c1d95',
+        '#4338ca', '#3730a3', '#312e81', '#1e1b4b', '#1e3a8a'
+      ]
+
+      wordcloud(groupsWordCloudRef.current, {
+        list: groupsData,
+        gridSize: 8,
+        weightFactor: 1,
+        fontFamily: 'Arial, sans-serif',
+        color: function (word, weight) {
+          const index = groupsData.findIndex(item => item[0] === word)
+          return colors[index % colors.length] || '#000000'
+        },
+        rotateRatio: 0.1,
+        rotationSteps: 2,
+        backgroundColor: '#f0f9ff'
+      })
+    }
+    
+    // Render with small delay to ensure canvas is ready
+    setTimeout(() => {
+      renderWordCloud()
+    }, 100)
+
     return () => {
       [timelineChartRef, subredditChartRef, topicBubblesRef, sentimentDistributionRef, sentimentTimelineRef, stanceDistributionRef, evidenceSourcesRef, groupSentimentRef, biasTimelineRef].forEach(ref => {
         if (ref.current) Plotly.purge(ref.current)
@@ -346,7 +446,15 @@ function AnalysisPage() {
 
         {/* Post Dynamics */}
         <div className="mb-4 bg-white rounded-md p-4 shadow-sm border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-900">Post Dynamics</h3>
+          <div className="mb-4">
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Post Dynamics</h3>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Analyze the temporal patterns and distribution of posts across different subreddits. 
+              The timeline chart shows posting activity over time, revealing peak engagement periods 
+              and trends in discussion volume. The subreddit breakdown highlights which communities 
+              are most active in the youth crime policy debate.
+            </p>
+          </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div className="lg:col-span-2">
               <div ref={timelineChartRef} style={{ height: '300px' }}></div>
@@ -360,55 +468,65 @@ function AnalysisPage() {
 
         {/* Topic Landscape */}
         <div className="mb-4 bg-white rounded-md p-4 shadow-sm border border-gray-200">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-semibold text-gray-900">Topic & Argument Landscape</h3>
-            <div className="flex items-center gap-4 text-xs text-gray-600">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                <span>Negative</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                <span>Mixed</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                <span>Positive</span>
+          <div className="mb-4">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-xl font-semibold text-gray-900">Topic & Argument Landscape</h3>
+              <div className="flex items-center gap-4 text-xs text-gray-600">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                  <span>Negative</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <span>Mixed</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                  <span>Positive</span>
+                </div>
               </div>
             </div>
+            <p className="text-sm text-gray-600 leading-relaxed mt-2">
+              Explore the positioning of different topics and arguments across the debate landscape. 
+              The bubble chart maps topics along two key dimensions: Punitive vs Rehabilitative approaches 
+              and Legal vs Emotional framing. Bubble size represents total engagement, while position 
+              indicates argument stance. The overview panel provides detailed metrics for each topic, 
+              including sentiment distribution and engagement statistics.
+            </p>
           </div>
           
-          {/* Chart Section */}
-          <div className="mb-4">
-            <div ref={topicBubblesRef} style={{ height: '500px' }}></div>
-            <div className="mt-4 flex items-center justify-center gap-8 text-xs text-gray-600">
-              <div className="flex items-center gap-2">
-                <span className="font-medium">Bubble size</span>
-                <span>∝ Total engagement</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-medium">Position</span>
-                <span>Argument stance</span>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {/* Chart Section - Left Side */}
+            <div className='col-span-2'>
+              <div ref={topicBubblesRef} style={{ height: '400px' }}></div>
+              <div className="mt-4 flex items-center justify-center gap-8 text-xs text-gray-600">
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">Bubble size</span>
+                  <span>∝ Total engagement</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">Position</span>
+                  <span>Argument stance</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Topic Cards Grid */}
-          <div className="mt-4">
-            <h4 className="text-lg font-medium text-gray-800 mb-4">All Topics Overview</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Topic Cards Grid - Right Side */}
+            <div>
+              <h4 className="text-lg font-medium text-gray-800 mb-4">All Topics Overview</h4>
+              <div className="grid grid-cols-1 gap-2 max-h-[400px] overflow-y-auto">
               {topicData.map((topic) => (
                 <div 
                   key={topic.id} 
-                  className="p-4 border border-gray-200 rounded-lg hover:shadow-md cursor-pointer transition-all"
+                  className="p-2 border border-gray-200 rounded-lg hover:shadow-md cursor-pointer transition-all"
                   style={{ borderLeft: `4px solid ${topic.color}` }}
                 >
-                  <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-start justify-between mb-1">
                     <h5 className="font-semibold text-gray-900 text-sm leading-tight">{topic.name}</h5>
                     <i className={`fa-solid fa-arrow-trend-${topic.trend} text-${topic.trend === 'up' ? 'green' : topic.trend === 'down' ? 'red' : 'gray'}-600 text-xs ml-2 flex-shrink-0`}></i>
                   </div>
                   
-                  <div className="space-y-2 mb-3">
+                  <div className="space-y-2 mb-1">
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-gray-600">Posts</span>
                       <span className="font-semibold text-gray-900">{topic.posts.toLocaleString()}</span>
@@ -419,7 +537,7 @@ function AnalysisPage() {
                     </div>
                   </div>
 
-                  <div className="mb-3">
+                  <div className="mb-1">
                     <div className="flex items-center justify-between text-xs mb-1">
                       <span className="text-gray-600">Sentiment</span>
                       <span className={`px-2 py-0.5 text-xs rounded ${topic.sentimentColor}`}>
@@ -461,54 +579,51 @@ function AnalysisPage() {
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Sentiment & Stance */}
-        <div className="mb-4 bg-white rounded-md p-4 shadow-sm border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Sentiment & Stance Analysis</h3>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div ref={sentimentDistributionRef} style={{ height: '300px' }}></div>
-            <div ref={sentimentTimelineRef} style={{ height: '300px' }}></div>
-            <div ref={stanceDistributionRef} style={{ height: '300px' }}></div>
-          </div>
-        </div>
-
-        {/* Reliability */}
-        <div className="mb-4 bg-white rounded-md p-4 shadow-sm border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Reliability & Evidence Quality</h3>
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-            <div ref={evidenceSourcesRef} style={{ height: '250px' }}></div>
-            <div>
-              <h4 className="text-lg font-medium text-gray-800 mb-4 text-center">Reliability Score</h4>
-              <div className="space-y-3">
-                {[{ label: 'Source Quality', value: '7.2', color: 'bg-green-500', width: '72%' }, { label: 'Consistency', value: '5.8', color: 'bg-yellow-500', width: '58%' }, { label: 'Alignment', value: '6.1', color: 'bg-orange-500', width: '61%' }].map((item, idx) => (
-                  <div key={idx}>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">{item.label}</span>
-                      <span className="text-sm font-bold text-gray-900">{item.value}/10</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className={`${item.color} h-2 rounded-full`} style={{ width: item.width }}></div>
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
-            <div></div>
+          </div>
+        </div>
+
+        {/* Sentiment & Stance and Reliability */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+          {/* Sentiment & Stance */}
+          <div className="bg-white rounded-md p-4 shadow-sm border border-gray-200">
             <div>
-              <h4 className="text-lg font-medium text-gray-800 mb-4">Red Flags</h4>
-              <div className="space-y-3">
-                {[{ icon: 'fa-exclamation-triangle', color: 'text-yellow-500', title: 'Emotional Language', count: 147 }, { icon: 'fa-shield-halved', color: 'text-red-500', title: 'Possible Misinformation', count: 23 }, { icon: 'fa-fire', color: 'text-orange-500', title: 'Toxic Discussions', count: 89 }].map((flag, idx) => (
-                  <div key={idx} className="flex items-center gap-3">
-                    <i className={`fa-solid ${flag.icon} ${flag.color} text-lg`}></i>
-                    <div>
-                      <p className="text-sm font-medium">{flag.title}</p>
-                      <p className="text-xs text-gray-600">{flag.count} posts flagged</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Sentiment & Stance Analysis</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Examine how sentiment evolves over time within the discourse, revealing patterns in emotional tone 
+                and argumentative positions throughout the debate.
+              </p>
+            </div>
+            <div ref={sentimentTimelineRef} style={{ height: '250px' }}></div>
+          </div>
+
+          {/* Reliability */}
+          <div className="bg-white rounded-md p-4 shadow-sm border border-gray-200">
+            <div className="mb-1">
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Reliability & Evidence Quality</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Assess the credibility and quality of evidence, evaluating source reliability, consistency, and 
+                alignment with verified information across multiple dimensions.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div ref={evidenceSourcesRef} style={{ height: '250px' }}></div>
+              <div>
+                <h4 className="text-lg font-medium text-gray-800 text-center">Reliability Score</h4>
+                <div className="space-y-1">
+                  {[{ label: 'Source Quality', value: '7.2', color: 'bg-green-500', width: '72%' }, { label: 'Consistency', value: '5.8', color: 'bg-yellow-500', width: '58%' }, { label: 'Alignment', value: '6.1', color: 'bg-orange-500', width: '61%' }].map((item, idx) => (
+                    <div key={idx}>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600">{item.label}</span>
+                        <span className="text-sm font-bold text-gray-900">{item.value}/10</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div className={`${item.color} h-2 rounded-full`} style={{ width: item.width }}></div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -516,23 +631,32 @@ function AnalysisPage() {
 
         {/* Bias Section */}
         <div className="mb-4 bg-white rounded-md p-4 shadow-sm border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Equity / Bias Signals</h3>
+          <div className="mb-4">
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Equity / Bias Signals</h3>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Track which groups are mentioned most frequently and analyze sentiment patterns across different 
+              communities to identify potential biases and representation imbalances in the discourse.
+            </p>
+          </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
               <h4 className="text-lg font-medium text-gray-800 mb-4">Groups Mentioned</h4>
-              <div className="flex flex-wrap gap-2">
-                {['Indigenous youth', 'Police', 'Migrant communities', 'Rural youth', 'Judges', 'Victims'].map((group, idx) => (
-                  <span key={idx} className={`px-${idx === 0 ? 4 : 3} py-${idx === 0 ? 3 : 2} ${idx === 0 ? 'bg-blue-100 text-blue-800 text-xl' : 'bg-gray-100 text-gray-800'} rounded-lg font-medium cursor-pointer hover:opacity-80 transition`}>
-                    {group}
-                  </span>
-                ))}
+              <div 
+                style={{ 
+                  height: '300px', 
+                  width: '100%',
+                  backgroundColor: '#f0f9ff',
+                  borderRadius: '8px',
+                  padding: '2px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <canvas ref={groupsWordCloudRef} style={{ maxWidth: '100%', maxHeight: '100%' }}></canvas>
               </div>
             </div>
-            <div ref={groupSentimentRef} style={{ height: '250px' }}></div>
-          </div>
-          <div>
-            <h4 className="text-lg font-medium text-gray-800 mb-4">Bias Over Time</h4>
-            <div ref={biasTimelineRef} style={{ height: '200px' }}></div>
+            <div ref={groupSentimentRef} style={{ height: '400px' }}></div>
           </div>
         </div>
       </div>
@@ -541,3 +665,4 @@ function AnalysisPage() {
 }
 
 export default AnalysisPage
+

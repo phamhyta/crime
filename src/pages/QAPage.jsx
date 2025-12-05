@@ -8,7 +8,7 @@ import ReasoningSteps from '../components/qa/ReasoningSteps'
 
 function QAPage() {
   const [message, setMessage] = useState('')
-  const [qaMode, setQaMode] = useState('normal') // 'normal' hoặc 'reasoning'
+  const [qaMode, setQaMode] = useState('normal') // 'normal' or 'reasoning'
   const [conversations, setConversations] = useState([
     {
       id: 1,
@@ -151,7 +151,7 @@ function QAPage() {
                       : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
-                  <i className="fa-solid fa-comment-dots mr-2"></i>Thường
+                  <i className="fa-solid fa-comment-dots mr-2"></i>Normal
                 </button>
                 <button
                   onClick={() => setQaMode('reasoning')}
@@ -168,7 +168,7 @@ function QAPage() {
             {qaMode === 'reasoning' && (
               <div className="flex items-center gap-2 text-xs text-purple-600 bg-purple-50 px-3 py-1.5 rounded-lg">
                 <i className="fa-solid fa-info-circle"></i>
-                <span>Hiển thị các bước suy luận chi tiết</span>
+                <span>Showing detailed reasoning steps</span>
               </div>
             )}
           </div>

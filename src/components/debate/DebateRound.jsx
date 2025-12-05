@@ -4,7 +4,7 @@ function DebateRound({ round, isActive, onToggle, children, heatmapRef }) {
   return (
     <div className="bg-white rounded-md shadow-sm border border-gray-200 overflow-hidden">
       <div
-        className={`bg-gradient-to-r ${round.gradient} p-4 flex items-center justify-between cursor-pointer`}
+        className={`bg-gradient-to-r ${round.gradient} p-3 flex items-center justify-between cursor-pointer`}
         onClick={onToggle}
       >
         <div className="flex items-center gap-3">

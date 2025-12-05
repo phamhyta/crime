@@ -13,7 +13,7 @@ function EvidencePanel({ evidences, claimEvidenceRef, onEvidenceClick }) {
       </div>
 
       <div className="mt-4">
-        <h4 className="text-sm font-semibold text-gray-700 mb-3">Claim-Evidence Graph</h4>
+        <h4 className="text-sm font-semibold text-gray-700">Claim-Evidence Graph</h4>
         <div ref={claimEvidenceRef} style={{ height: '250px' }}></div>
       </div>
 

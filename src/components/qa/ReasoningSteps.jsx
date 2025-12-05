@@ -3,11 +3,11 @@ function ReasoningSteps({ steps = [] }) {
     {
       step: 1,
       title: 'Query Analysis',
-      description: 'Phân tích câu hỏi để xác định các khái niệm chính, entities, và intent',
+      description: 'Analyze the question to identify key concepts, entities, and intent',
       details: [
-        'Xác định keywords: "age of criminal responsibility", "Queensland", "raise"',
-        'Phân loại intent: Policy analysis và Evidence gathering',
-        'Xác định scope: Juvenile justice system, legal framework'
+        'Identify keywords: "age of criminal responsibility", "Queensland", "raise"',
+        'Classify intent: Policy analysis and Evidence gathering',
+        'Define scope: Juvenile justice system, legal framework'
       ],
       icon: 'fa-search',
       color: 'blue'
@@ -15,11 +15,11 @@ function ReasoningSteps({ steps = [] }) {
     {
       step: 2,
       title: 'Document Retrieval',
-      description: 'Tìm kiếm và lấy về các tài liệu liên quan từ database',
+      description: 'Search and retrieve relevant documents from database',
       details: [
-        '164 documents được tìm thấy từ các nguồn: Legal, News, Research Papers',
-        'Relevance scoring: Top 20 documents có score > 0.85',
-        'Source diversity: Đảm bảo đa dạng nguồn (Government, Academic, News)'
+        '164 documents found from sources: Legal, News, Research Papers',
+        'Relevance scoring: Top 20 documents with score > 0.85',
+        'Source diversity: Ensure diverse sources (Government, Academic, News)'
       ],
       icon: 'fa-database',
       color: 'green'
@@ -27,11 +27,11 @@ function ReasoningSteps({ steps = [] }) {
     {
       step: 3,
       title: 'Evidence Extraction',
-      description: 'Trích xuất các bằng chứng cụ thể từ các tài liệu',
+      description: 'Extract specific evidence from documents',
       details: [
-        'Extract key claims về age requirements từ legal documents',
-        'Extract statistical data về recidivism rates từ research papers',
-        'Extract policy positions từ government reports và news articles'
+        'Extract key claims about age requirements from legal documents',
+        'Extract statistical data about recidivism rates from research papers',
+        'Extract policy positions from government reports and news articles'
       ],
       icon: 'fa-file-alt',
       color: 'purple'
@@ -39,10 +39,10 @@ function ReasoningSteps({ steps = [] }) {
     {
       step: 4,
       title: 'Sentiment & Stance Analysis',
-      description: 'Phân tích sentiment và stance của các bằng chứng',
+      description: 'Analyze sentiment and stance of evidence',
       details: [
         'Sentiment analysis: Positive (pro-reform) vs Negative (against)',
-        'Stance detection: Identify arguments supporting và opposing views',
+        'Stance detection: Identify arguments supporting and opposing views',
         'Confidence scoring: High (0.9+) vs Medium (0.7-0.9) vs Low (<0.7)'
       ],
       icon: 'fa-brain',
@@ -51,11 +51,11 @@ function ReasoningSteps({ steps = [] }) {
     {
       step: 5,
       title: 'Fact Verification',
-      description: 'Xác minh tính chính xác của các claims',
+      description: 'Verify the accuracy of claims',
       details: [
-        'Cross-reference claims với multiple sources',
-        'Verify statistics từ official government databases',
-        'Check citation validity và source reliability scores'
+        'Cross-reference claims with multiple sources',
+        'Verify statistics from official government databases',
+        'Check citation validity and source reliability scores'
       ],
       icon: 'fa-check-double',
       color: 'green'
@@ -63,11 +63,11 @@ function ReasoningSteps({ steps = [] }) {
     {
       step: 6,
       title: 'Answer Synthesis',
-      description: 'Tổng hợp thông tin để tạo câu trả lời hoàn chỉnh',
+      description: 'Synthesize information to create a complete answer',
       details: [
-        'Organize evidence theo categories: Arguments, Supporting Evidence, Opposing Evidence',
-        'Synthesize balanced answer với multiple perspectives',
-        'Include citations và reliability scores cho transparency'
+        'Organize evidence by categories: Arguments, Supporting Evidence, Opposing Evidence',
+        'Synthesize balanced answer with multiple perspectives',
+        'Include citations and reliability scores for transparency'
       ],
       icon: 'fa-puzzle-piece',
       color: 'orange'

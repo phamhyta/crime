@@ -285,13 +285,13 @@ function DebatePage() {
             </div>
 
             {/* Strength Chart */}
-            <div className="bg-white rounded-md shadow-sm border border-gray-200 p-4 mt-4">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Argument Strength Progression</h3>
+            <div className="bg-white rounded-md shadow-sm border border-gray-200 p-2 mt-4">
+              <h3 className="text-xl font-semibold text-gray-900">Argument Strength Progression</h3>
               <div ref={strengthChartRef} style={{ height: '300px' }}></div>
             </div>
 
             {/* AI Suggestion */}
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-md p-4 mt-4 border border-blue-200">
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-md p-2 mt-4 border border-blue-200">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                   <i className="fa-solid fa-robot text-white"></i>
